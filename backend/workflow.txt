@@ -1,0 +1,125 @@
+req.cred => has user info in credDecode
+
+         cred:{
+            creating{
+               name:"",etc
+            }
+         }
+
+req.image => has image url of cloud
+req.images => has array of images 
+
+
+/api/v1/register ---> for server upload profile image 
+/api/v2/register ---> for cloud upload profile image 
+
+
+''''''''''''''''''''''''''''''''''''''''''''''''''''''
+      The Process for user seller and Management is same 
+'''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+******************** For Forgot Password *********************
+
+ For Seller and User the login page is on home page  
+ For Management team the login url already sended on the mail 
+
+
+******************** For Forgot Password ************************
+
+1) will go to the forgot password route ("/api/v1/forgot-password")
+
+    {
+    "email": "abc@gmail.com"
+    }
+
+2) you Will receive and email link on the entered email
+
+3) link will redirect to the next GET route  to visit a page 
+   ("/api/v1/reset-password?token=")
+   token is attached already with the link in email
+   and extracting the token from there and rendering the data 
+   related to the user in the next file 
+
+4) POST route ("/api/v1/reset-password") is updating the value of password and 
+   forwarding to next success route ("/api/v1/reset-success")
+
+
+*************** Authentication middleware ************
+
+1) taking token from query,headers and body
+2) After that we are attaching the user data to the req we can access the data
+   of the user with (req.cred.credDecode)
+
+
+****************** Update Profile ********************
+
+1) While updating profile we are taking name and mobile the image is optional 
+   if we are sending image send through form data 
+
+2) while uploading the image we are finding out the path for old image and deleting
+   it and then we are updating it with the new one 
+
+
+******************* Refresh Token *******************
+
+1) creating the two token with different expiries 
+2) on calling on the route ( "/api/v1/refresh-token" ) it will again send two
+   tokens to the client side for further process
+3) Need --> we dent want user to login again and again we the help of refresh token
+            we are generating the access token and sending again to the client side 
+
+
+************************ Logout ***********************
+
+1) once you generate the JWT token it will be valid until the time of expiration
+2) so on logout we have to blacklist the token 
+
+
+############################## Management #####################################
+
+ Admin Is the head of Booklio Management team
+
+*********************** Admin ************************
+
+ Admin have below permissions 
+   
+    1) Member/Role creation (exclude admin)
+       ---> The mail with the login credentials and the login link will be sent 
+       to the register member
+       ---> The candidate can chen or update there password by using forgot password 
+    
+    2) Role updation 
+
+    3) Deletion
+       ---> Delete member/Role 
+        ---> Delete user
+         ---> Delete seller
+
+     4) Data 
+       ---> can Get all member data or specific 
+         ---> can Get all user data or specific 
+           ---> can Get all seller data or specific  
+             ---> can get Batch Data of all
+
+
+
+
+
+
+
+User-password;- Password123!
+admin-Password:- {
+    "email": "rohanvinkare2022@gmail.com",
+    "password":"Rohan123#XYZ"
+}
+
+
+
+
+//================ users
+
+
+{
+  "email": "aarav.sharma@example.com",
+  "password": "Password123!"
+}
