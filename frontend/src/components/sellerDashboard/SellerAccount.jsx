@@ -1,40 +1,32 @@
 import { Card, CardHeader, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Avatar } from "@/components/ui/avatar"; // ShadCN Avatar for profile picture
+import { Avatar } from "@/components/ui/avatar";
 import { FaFacebookF, FaInstagram, FaLinkedinIn } from "react-icons/fa";
 import { useOutletContext } from "react-router-dom";
 
 const SellerAccount = () => {
-  const { sellerData } = useOutletContext(); // Access nested sellerData
+  const { sellerData } = useOutletContext();
 
-  // Function to extract initials from the name
-  const getInitials = (name) => {
-    return name
-      .split(" ")
-      .map((word) => word[0])
-      .join("")
-      .toUpperCase();
-  };
+  const getInitials = (name) =>
+    name?.split(" ").map((word) => word[0]).join("").toUpperCase();
 
-  const capitalize = (word) => {
-    return word?.toUpperCase();
-  };
+  const capitalize = (word) => word?.toUpperCase();
 
-  // If seller data is not provided, show a loading or fallback message
   if (!sellerData) {
     return (
-      <div className="text-center p-8 text-2xl font-semibold text-slate-700">
+      <div className="text-center p-8 text-2xl font-semibold text-gray-300">
         Loading seller data...
       </div>
     );
   }
 
   return (
-    <Card className="shadow-2xl rounded-xl bg-white p-8 max-w-4xl w-full mx-auto">
-      <CardHeader className="flex items-center space-x-6">
-        {/* Avatar or initials */}
-        <div className="flex justify-center items-center gap-20">
-          <Avatar className="w-32 h-32 bg-black text-4xl font-bold text-white shadow-lg flex items-center justify-center">
+    <Card className="shadow-xl rounded-2xl bg-[#2A2A2A] p-10 max-w-5xl w-full mx-auto relative overflow-hidden border border-gray-700">
+      <div className="absolute inset-0 bg-gradient-to-r from-gray-800 to-gray-700 opacity-10 rounded-2xl"></div>
+      
+      <CardHeader className="flex flex-col items-center text-center">
+        <div className="relative">
+          <Avatar className="w-40 h-40 bg-gray-800 text-5xl font-bold text-white shadow-lg rounded-full border-4 border-gray-600">
             {sellerData?.image ? (
               <img
                 src={sellerData.image}
@@ -42,90 +34,52 @@ const SellerAccount = () => {
                 className="h-full w-full rounded-full object-cover"
               />
             ) : (
-              <span className="text-3xl">{getInitials(sellerData?.name)}</span>
+              <span>{getInitials(sellerData?.name)}</span>
             )}
           </Avatar>
-
-          {/* Seller Info */}
-          <div className="space-y-2 ">
-            <h2 className="text-slate-900">
-              <span className="font-medium font-mono text-xl">SELLER: </span>
-              <span className="text-2xl font-sans-serif ">{capitalize(sellerData?.name)}</span>
-            </h2>
-            <h2 className="text-slate-900">
-              <span className="font-medium font-mono text-xl">STORE: </span>
-              <span className="text-2xl font-sans-serif">{capitalize(sellerData?.storeName)}</span>
-            </h2>
-          </div>
+          <div className="absolute bottom-1 -right-3 bg-green-500 w-5 h-5 rounded-full border-2 border-gray-900"></div>
         </div>
+        <h2 className="mt-4 text-3xl font-bold text-white tracking-wide">
+          {capitalize(sellerData?.name)}
+        </h2>
+        <p className="text-gray-400 text-lg font-light">{capitalize(sellerData?.storeName)}</p>
       </CardHeader>
 
-      <CardContent className="flex w-full md:flex-row justify-center items-center gap-8 mt-6">
-        {/* Contact Information */}
-        <div className="flex-1">
-          <h4 className="text-xl font-semibold text-slate-800 mb-2">Contact Information</h4>
-          <p className="text-slate-600">📧 <span className="font-semibold">Email:</span> {sellerData?.email}</p>
-          <p className="text-slate-600">📞 <span className="font-semibold">Mobile:</span> {sellerData?.mobile}</p>
-          <p className="text-slate-600">💳 <span className="font-semibold">UPI ID:</span> {sellerData?.upiId || "N/A"}</p>
-          <p className="text-slate-600">🧾 <span className="font-semibold">GST Number:</span> {sellerData?.gstNumber || "N/A"}</p>
+      <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-10 p-6">
+        <div className="p-4 rounded-xl">
+          <h4 className="text-lg font-semibold text-white mb-3">Contact Info</h4>
+          <p className="text-gray-400">📧 <span className="font-semibold">Email:</span> {sellerData?.email}</p>
+          <p className="text-gray-400">📞 <span className="font-semibold">Mobile:</span> {sellerData?.mobile}</p>
+          <p className="text-gray-400">💳 <span className="font-semibold">UPI ID:</span> {sellerData?.upiId || "N/A"}</p>
+          <p className="text-gray-400">🧾 <span className="font-semibold">GST Number:</span> {sellerData?.gstNumber || "N/A"}</p>
         </div>
 
-        {/* Address */}
-        <div className="flex-1">
-          <h4 className="text-xl font-semibold text-slate-800 mb-2">Address</h4>
-          <p className="text-slate-600">{sellerData?.address.street}</p>
-          <p className="text-slate-600">
-            {sellerData.address.city}, {sellerData?.address.state}
-          </p>
-          <p className="text-slate-600">
-            {sellerData.address.country} - {sellerData?.address.zipCode}
-          </p>
+        <div className="p-4 shadow-xl">
+          <h4 className="text-lg font-semibold text-white mb-3">Address</h4>
+          <p className="text-gray-400">{sellerData?.address.street}</p>
+          <p className="text-gray-400">{sellerData?.address.city}, {sellerData?.address.state}</p>
+          <p className="text-gray-400">{sellerData?.address.country} - {sellerData?.address.zipCode}</p>
         </div>
       </CardContent>
 
-      {/* Social Media Links */}
-      <CardFooter className="flex space-x-6 justify-center mt-6">
+      <CardFooter className="flex space-x-6 justify-center mt-6 pb-6">
         {sellerData.socialMediaLinks?.facebook && (
-          <a
-            href={sellerData.socialMediaLinks.facebook}
-            target="_blank"
-            className="text-white"
-            rel="noopener noreferrer"
-          >
-            <Button
-              variant="outline"
-              className="p-3 rounded-full hover:bg-blue-600 hover:text-white transition duration-300"
-            >
+          <a href={sellerData.socialMediaLinks.facebook} target="_blank" rel="noopener noreferrer">
+            <Button className="p-3 rounded-full bg-blue-600 hover:bg-blue-700 text-white shadow-md">
               <FaFacebookF size={20} />
             </Button>
           </a>
         )}
         {sellerData.socialMediaLinks?.instagram && (
-          <a
-            href={sellerData.socialMediaLinks.instagram}
-            target="_blank"
-            className="text-white"
-            rel="noopener noreferrer"
-          >
-            <Button
-              variant="outline"
-              className="p-3 rounded-full hover:bg-pink-500 hover:text-white transition duration-300"
-            >
+          <a href={sellerData.socialMediaLinks.instagram} target="_blank" rel="noopener noreferrer">
+            <Button className="p-3 rounded-full bg-pink-500 hover:bg-pink-600 text-white shadow-md">
               <FaInstagram size={20} />
             </Button>
           </a>
         )}
         {sellerData.socialMediaLinks?.linkedin && (
-          <a
-            href={sellerData.socialMediaLinks.linkedin}
-            target="_blank"
-            className="text-white"
-            rel="noopener noreferrer"
-          >
-            <Button
-              variant="outline"
-              className="p-3 rounded-full hover:bg-blue-700 hover:text-white transition duration-300"
-            >
+          <a href={sellerData.socialMediaLinks.linkedin} target="_blank" rel="noopener noreferrer">
+            <Button className="p-3 rounded-full bg-blue-700 hover:bg-blue-800 text-white shadow-md">
               <FaLinkedinIn size={20} />
             </Button>
           </a>

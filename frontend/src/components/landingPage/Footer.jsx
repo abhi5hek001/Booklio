@@ -8,7 +8,7 @@ export const Footer = () => {
         <>
             <div className="h-[30vh] bg-backgroundContrast text-white text-3xl p-20 flex justify-around">
                 <div>
-                    <p className="font-unbounded text-5xl font-semibold">Booklio</p>
+                    <p className="font-unbounded text-blue-400 text-5xl font-semibold">Booklio</p>
                     <div>
                         <a className="text-lg flex gap-2 mt-2 items-center" href="">
                             Our Team
@@ -53,7 +53,7 @@ export const Footer = () => {
                     </div>
                 </div>
             </div>
-            <div className="bg-background text-xs text-white flex justify-center items-center">
+            <div className="bg-backgroundContrast pb-4 text-xs text-white flex justify-center items-center">
                 © Copyright: All rights reserved by Booklio.com
             </div>
         </>

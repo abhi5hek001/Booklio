@@ -28,7 +28,7 @@ export const Faqs = () => {
         <div className="flex justify-center items-center">
             <section
                 id="faq"
-                className="flex-col w-[80vw] justify-center items-center px-60 pt-20 h-[50vh] mt-10 text-3xl text-white bg-background">
+                className="flex-col w-[80vw] justify-center items-center px-60 pt-20 h-[50vh] mt-10 text-3xl text-white bg-backgroundContrast">
                 <p className="text-4xl font-helvetica">FAQ's</p>
 
                 {faqs.map((faq, index) => (

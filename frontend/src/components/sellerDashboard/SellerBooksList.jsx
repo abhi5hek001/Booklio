@@ -138,7 +138,7 @@ const SellerBooksList = () => {
 
 
   return (
-    <div className=" grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 p-6">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 p-6">
       {books.length > 0 ? (
         books.map((book, index) => {
           const {
@@ -186,11 +186,11 @@ const SellerBooksList = () => {
                   />
                 </CardHeader>
                 <CardContent className="p-4">
-                  <h2 className="text-xl font-semibold text-gray-800">
+                  <h2 className="text-xl font-semibold text-white">
                     {title}
                   </h2>
-                  <p className="text-sm text-gray-600">{authors}</p>
-                  <p className="mt-2 text-sm text-gray-500 line-clamp-3">
+                  <p className="text-sm text-white">{authors}</p>
+                  <p className="mt-2 text-sm text-white line-clamp-3">
                     {description}
                   </p>
                 </CardContent>
@@ -203,7 +203,7 @@ const SellerBooksList = () => {
                   </CardFooter>
                 </DialogTrigger>
               </Card>
-              <DialogContent className="max-w-3xl p-6 bg-white rounded-lg shadow-lg">
+              <DialogContent className="max-w-3xl p-6 bg-[#232323] text-white rounded-lg shadow-lg">
                 <DialogHeader>
                   <DialogTitle>{title}</DialogTitle>
                 </DialogHeader>
@@ -238,7 +238,7 @@ const SellerBooksList = () => {
                 <DialogFooter className="flex justify-end">
                   <Button
                     variant="outline"
-                    className="bg-red-500 text-white"
+                    className="bg-red-500 text-black"
                     onClick={() => confirmRemoveBook(book.isbn)} // Confirmation before delete
                   >
                     Remove <IoCloseCircle className="ml-2" />

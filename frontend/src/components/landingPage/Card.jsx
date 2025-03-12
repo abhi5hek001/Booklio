@@ -14,7 +14,7 @@ const Card = ({ image }) => {
     >
       <AnimatePresence>
         {showOverlay && (
-          <a href="/shop/listing">
+          <a href="/shop">
             <motion.div
               className="absolute inset-0 z-10 flex justify-center items-center"
               initial={{ opacity: 0 }}

@@ -65,12 +65,12 @@ const BookDetails = () => {
   }
 
   return (
-    <div className="p-10">
-      <p className="text-3xl px-10 font-extrabold font-helvetica">
+    <div className="p-10 flex justify-center items-center flex-col">
+      <p className="text-4xl px-10 font-extrabold font-helvetica">
         Book Details
       </p>
       {/* Book Details Section */}
-      <div className="p-6">
+      <div className="pt-10 w-[80%]">
         <Card className="shadow-lg rounded-lg p-6 mb-6">
           <div className="flex flex-col mx-20 md:flex-row gap-6">
             {/* Book Cover */}
@@ -84,11 +84,11 @@ const BookDetails = () => {
             {/* Book Info */}
             <div className="w-full md:w-2/3">
               <h1 className="text-3xl font-bold mb-2">{book.volumeInfo.title}</h1>
-              <p className="text-lg text-gray-600 mb-4">
+              <p className="text-lg text-white mb-4">
                 <strong>Author(s):</strong> {book.volumeInfo.authors?.join(", ")}
               </p>
-              <p className="text-gray-700 mb-4">{book.volumeInfo.description}</p>
-              <div className="text-gray-600 space-y-2">
+              <p className="text-white mb-4">{book.volumeInfo.description}</p>
+              <div className="text-white space-y-2">
                 <p>
                   <strong>Publisher:</strong> {book.volumeInfo.publisher}
                 </p>
@@ -130,13 +130,13 @@ const BookDetails = () => {
               <CardTitle className="text-lg font-bold">{sellerInfo.storeName}</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-gray-600 mb-2">
+              <p className="text-white mb-2">
                 <strong>Seller:</strong> {sellerInfo.name}
               </p>
-              <p className="text-gray-600 mb-2">
+              <p className="text-white mb-2">
                 <strong>Description:</strong> {sellerInfo.storeDescription}
               </p>
-              <p className="text-gray-600 mb-2">
+              <p className="text-white mb-2">
                 <strong>Location:</strong>{" "}
                 {`${sellerInfo.address.street}, ${sellerInfo.address.city}, ${sellerInfo.address.state}, ${sellerInfo.address.zipCode}`}
               </p>
@@ -173,10 +173,10 @@ const BookDetails = () => {
               </div>
             </CardContent>
             <CardFooter className="flex flex-col items-start">
-              <p className="text-gray-600 mb-2">
+              <p className="text-white mb-2">
                 <strong>Contact:</strong> {sellerInfo.email}
               </p>
-              <p className="text-gray-600 mb-4">
+              <p className="text-white mb-4">
                 <strong>UPI ID:</strong> {sellerInfo.upiId}
               </p>
               <Button
@@ -191,9 +191,9 @@ const BookDetails = () => {
       )}
 
       {/* Sellers List Section */}
-      <div>
+      <div className="mx-10">
         <h2 className="text-2xl font-bold mb-4 m-5">Other Sellers Selling This Book</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-6">
           {sellers.map((seller) => (
             <Card key={seller.sellerId} className="shadow-lg p-4 m-5">
               <CardHeader>
@@ -205,19 +205,19 @@ const BookDetails = () => {
                 <CardTitle className="text-lg font-bold">{seller.storeName}</CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-600 mb-2">
+                <p className="text-white mb-2">
                   <strong>Seller:</strong> {seller.name}
                 </p>
-                <p className="text-gray-600 mb-2">
+                <p className="text-white mb-2">
                   <strong>Description:</strong> {seller.storeDescription}
                 </p>
-                <p className="text-gray-600 mb-2">
+                <p className="text-white mb-2">
                   <strong>Location:</strong>{" "}
                   {`${seller.address.street}, ${seller.address.city}, ${seller.address.state}, ${seller.address.zipCode}`}
                 </p>
               </CardContent>
               <CardFooter className="flex flex-col items-start">
-                <p className="text-gray-600 mb-2">
+                <p className="text-white mb-2">
                   <strong>Contact:</strong> {seller.email}
                 </p>
                 <Button

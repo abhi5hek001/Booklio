@@ -38,7 +38,7 @@ export const theme = {
       "5xl": ["4.5rem", "1.05"],
     },
     height: {
-      'header-row-height': '44px',
+      'header-row-height': '24px',
       'header-height': 'calc(var(--header-row-height) * 2)',
       'hero-height': 'calc(100svh - var(--header-height))',
     },

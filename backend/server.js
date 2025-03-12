@@ -7,6 +7,11 @@ const connectDB = require("./config/db-config.js");
 const app = express();
 connectDB();
 
+//---- CORS Middleware
+const cors = require("cors");
+app.use(cors()); // Enables Cross-Origin Resource Sharing 
+
+
 app.set("view engine", "ejs");
 app.set("views", "./views");
 
@@ -18,10 +23,6 @@ const errorHandler = require("./middleware/error-handler");
 
 
 //======================================= Application Middleware
-
-//---- CORS Middleware
-const cors = require("cors");
-app.use(cors()); // Enables Cross-Origin Resource Sharing 
 
 //---- Morgan Middleware
 const { logger, requestLogger } = require("./middleware/logger");

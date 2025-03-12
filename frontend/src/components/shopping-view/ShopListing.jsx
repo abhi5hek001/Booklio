@@ -59,9 +59,8 @@ const ShopListing = () => {
   return (
     <div className="flex gap-4 p-10">
       {/* Left Sidebar: Genres */}
-      <div className="w-1/5">
-        <h2 className="text-xl font-bold mb-2">Genres</h2>
-        <Card className="p-4">
+      <div className="w-1/5 pt-[100px]">
+        <Card className="p-2">
           <CardHeader>
             <CardTitle>Genres</CardTitle>
           </CardHeader>
@@ -118,7 +117,7 @@ const ShopListing = () => {
             placeholder="Search by title or author..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full p-2 border rounded"
+            className="w-full p-1 border rounded bg-backgroundContrast text-white"
           />
         </div>
 
@@ -143,7 +142,7 @@ const ShopListing = () => {
               return (
                 <Card key={index} className="shadow-lg p-4 relative">
                   {price && (
-                    <div className="absolute z-10 top-0 left-0 bg-red-500 text-white text-sm font-bold py-1 px-4 shadow-md">
+                    <div className="absolute z-10 -top-1 -left-2 bg-red-500 text-white text-sm font-bold py-1 px-4 shadow-md before:z-5 before:content-[''] before:absolute before:-bottom-2 before:left-0 before:border-l-8 before:border-l-transparent before:border-t-8 before:border-t-red-700">
                       ₹{price}
                     </div>
                   )}
@@ -153,10 +152,10 @@ const ShopListing = () => {
                       <img
                         src={thumbnail}
                         alt={title}
-                        className="w-full h-48 object-cover rounded"
+                        className="w-full h-80 object-cover rounded"
                       />
                     ) : (
-                      <div className="w-full h-48 bg-gray-200 rounded flex items-center justify-center text-gray-500">
+                      <div className="w-full h-80 bg-gray-200 rounded flex items-center justify-center text-gray-200">
                         No Image
                       </div>
                     )}
@@ -166,16 +165,16 @@ const ShopListing = () => {
                   </CardHeader>
 
                   <CardContent>
-                    <p className="text-gray-700 truncate">{description}</p>
-                    <p className="text-gray-500 mt-2">
+                    <p className="text-gray-200 truncate">{description}</p>
+                    <p className="text-gray-200 mt-2">
                       <strong>Author:</strong>{" "}
                       {book.data.volumeInfo.authors?.join(", ") || "Unknown"}
                     </p>
-                    <p className="text-gray-500">
+                    <p className="text-gray-200">
                       <strong>Publisher:</strong>{" "}
                       {book.data.volumeInfo.publisher || "Unknown"}
                     </p>
-                    <p className="text-gray-500">
+                    <p className="text-gray-200">
                       <strong>Pages:</strong>{" "}
                       {book.data.volumeInfo.pageCount || "N/A"}
                     </p>
@@ -200,7 +199,7 @@ const ShopListing = () => {
               );
             })
           ) : (
-            <p className="text-gray-500">
+            <p className="text-gray-200">
               No books match your search criteria.
             </p>
           )}

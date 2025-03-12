@@ -78,7 +78,7 @@ const SellerLogin = () => {
       }
 
       const result = await response.json();
-      // console.log("Response from API:", result);
+      console.log("Response from API:", result);
 
       // Check for the accessToken in the response
       if (result.accessToken) {
