@@ -6,9 +6,11 @@ import linkedinIcon from '@public/socialIcons/linkedin.png';
 export const Footer = () => {
     return (
         <>
-            <div className="h-[30vh] bg-backgroundContrast text-white text-3xl p-20 flex justify-around">
+            <div className="h-[22vh] z-40 bg-backgroundContrast text-white text-3xl px-20 py-8 flex justify-around">
                 <div>
-                    <p className="font-unbounded text-blue-400 text-5xl font-semibold">Booklio</p>
+                    <a href="/">
+                        <p className="font-unbounded text-blue-400 text-5xl font-semibold">Booklio</p>
+                    </a>
                     <div>
                         <a className="text-lg flex gap-2 mt-2 items-center" href="">
                             Our Team
@@ -53,7 +55,7 @@ export const Footer = () => {
                     </div>
                 </div>
             </div>
-            <div className="bg-backgroundContrast pb-4 text-xs text-white flex justify-center items-center">
+            <div className="z-40 pb-2 bg-backgroundContrast text-xs text-white flex justify-center items-center">
                 © Copyright: All rights reserved by Booklio.com
             </div>
         </>

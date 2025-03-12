@@ -1,51 +1,42 @@
 import { useEffect, useState } from "react";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardContent,
-  CardFooter,
-} from "@/components/ui/card";
+import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
+import GenreFilter from "./GenreFilter";
+import notAvailable from "../../../public/notAvailable.png"
 
 const ShopListing = () => {
   const [bookData, setBookData] = useState({});
-  const [selectedGenre, setSelectedGenre] = useState(null); // To store selected genre
+  const [selectedGenres, setSelectedGenres] = useState([]);
   const [books, setBooks] = useState([]);
-  const [searchQuery, setSearchQuery] = useState(""); // New state for search
+  const [searchQuery, setSearchQuery] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Fetch genres and books using the fetch API
     fetch(`${import.meta.env.VITE_BASE_URL}/book/api/v1/all-genre-book`)
       .then((response) => response.json())
       .then((data) => {
         if (data.success) {
           setBookData(data.bookData);
-          const genres = Object.keys(data.bookData);
-          setSelectedGenre(genres[0]); // Set the first genre as default
-          setBooks(data.bookData[genres[0]]); // Set initial books for the first genre
+          setSelectedGenres([]);
+          setBooks(Object.values(data.bookData).flat());
         }
       })
       .catch((error) => console.error("Error fetching data:", error));
   }, []);
 
-  const handleGenreChange = (genre, checked) => {
-    if (checked) {
-      setSelectedGenre(genre);
-      setBooks(bookData[genre]);
-    } else {
-      setSelectedGenre(null);
+  useEffect(() => {
+    if (selectedGenres.length === 0) {
       setBooks(Object.values(bookData).flat());
+    } else {
+      setBooks(selectedGenres.flatMap((g) => bookData[g] || []));
     }
-  };
+  }, [selectedGenres, bookData]);
 
   const handleBuyNowClick = (isbn, sellerId) => {
     navigate(`/seller/${sellerId}/isbn/${isbn}`);
   };
 
-  // Filter books based on the search query
   const filteredBooks = books.filter((book) => {
     const title = book.data.volumeInfo?.title?.toLowerCase() || "";
     const authors =
@@ -57,59 +48,18 @@ const ShopListing = () => {
   });
 
   return (
-    <div className="flex gap-4 p-10">
-      {/* Left Sidebar: Genres */}
-      <div className="w-1/5 pt-[100px]">
-        <Card className="p-2">
-          <CardHeader>
-            <CardTitle>Genres</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-2">
-              {/* "All Books" option */}
-              <div className="flex items-center">
-                <input
-                  type="checkbox"
-                  id="all-books"
-                  checked={!selectedGenre}
-                  onChange={() => {
-                    setSelectedGenre(null);
-                    setBooks(Object.values(bookData).flat());
-                  }}
-                  className="mr-2"
-                />
-                <label htmlFor="all-books">All Books</label>
-              </div>
-
-              {/* Map over genres */}
-              {Object.keys(bookData).map((genre) => {
-                const sanitizedGenreId = genre
-                  .replace(/\s+/g, "-")
-                  .toLowerCase();
-                return (
-                  <div key={genre} className="flex items-center">
-                    <input
-                      type="checkbox"
-                      id={sanitizedGenreId}
-                      checked={genre === selectedGenre}
-                      onChange={(e) =>
-                        handleGenreChange(genre, e.target.checked)
-                      }
-                      className="mr-2"
-                    />
-                    <label htmlFor={sanitizedGenreId}>
-                      {genre.charAt(0).toUpperCase() + genre.slice(1)}
-                    </label>
-                  </div>
-                );
-              })}
-            </div>
-          </CardContent>
-        </Card>
+    <div className="flex flex-grow">
+      {/* Sidebar: Genres - Fixed position */}
+      <div className="fixed w-1/5 h-screen overflow-auto">
+        <GenreFilter
+          bookData={bookData}
+          selectedGenres={selectedGenres}
+          setSelectedGenres={setSelectedGenres}
+        />
       </div>
 
-      {/* Right Section: Books */}
-      <div className="w-4/5">
+      {/* Main Content - Scrollable */}
+      <div className="w-4/5 ml-[20%] p-10 mt-[4rem] min-h-screen pb-16">
         {/* Search Bar */}
         <div className="mb-4">
           <input
@@ -122,10 +72,8 @@ const ShopListing = () => {
         </div>
 
         <h2 className="text-xl font-bold mb-4">
-          {selectedGenre
-            ? `Books in ${
-                selectedGenre.charAt(0).toUpperCase() + selectedGenre.slice(1)
-              }`
+          {selectedGenres.length > 0
+            ? `Books in ${selectedGenres.join(", ")}`
             : "All Books"}
         </h2>
 
@@ -140,7 +88,7 @@ const ShopListing = () => {
                 book.data.volumeInfo?.description || "No description available";
 
               return (
-                <Card key={index} className="shadow-lg p-4 relative">
+                <Card key={index} className="shadow-lg flex flex-col justify-between p-4 relative">
                   {price && (
                     <div className="absolute z-10 -top-1 -left-2 bg-red-500 text-white text-sm font-bold py-1 px-4 shadow-md before:z-5 before:content-[''] before:absolute before:-bottom-2 before:left-0 before:border-l-8 before:border-l-transparent before:border-t-8 before:border-t-red-700">
                       ₹{price}
@@ -195,13 +143,15 @@ const ShopListing = () => {
                       </Button>
                     </CardFooter>
                   )}
+
                 </Card>
               );
             })
           ) : (
-            <p className="text-gray-200">
-              No books match your search criteria.
-            </p>
+            <div className="col-span-3 flex flex-col justify-center items-center">
+              <p className="text-gray-200">No books match your search criteria.</p>
+              <img className="h-80 opacity-70" src={notAvailable} alt="No books available" />
+            </div>
           )}
         </div>
       </div>

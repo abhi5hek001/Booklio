@@ -26,7 +26,7 @@ function ShoppingHeader() {
 
   return (
     <>
-      <header className="sticky top-0 z-40 w-full text-white border-b bg-background">
+      <header className="fixed top-0 z-40 w-full text-white border-b bg-background">
         <div className="flex h-20 items-center justify-between px-20 md:px-40">
           {/* Logo */}
           <Link to="/shop" className="flex items-center gap-2">

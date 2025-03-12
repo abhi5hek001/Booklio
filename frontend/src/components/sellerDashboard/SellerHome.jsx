@@ -9,7 +9,18 @@ import {
   FaRegClock,
   FaRegCheckCircle,
   FaChartLine,
-  FaRegFolder
+  FaRegFolder,
+  FaMoneyCheck,
+  FaDollarSign,
+  FaRupeeSign,
+  FaFacebookSquare,
+  FaBook,
+  FaSalesforce,
+  FaSellcast,
+  FaShopify,
+  FaShoppingBag,
+  FaShoppingBasket,
+  FaShoppingCart
 } from "react-icons/fa";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Bar, Line } from "react-chartjs-2";
@@ -70,6 +81,46 @@ const SellerHome = () => {
     }
   }, [sellerId, dispatch]);
 
+  // Find the book that is ordered maximum times based on ISBN
+  const findBestSellerBook = () => {
+    if (!sellerOrders || sellerOrders.length === 0) {
+      return { title: "N/A", isbn: null };
+    }
+
+    // Count occurrences of each ISBN
+    const isbnCount = {};
+    sellerOrders.forEach(order => {
+      const isbn = order.isbn;
+      isbnCount[isbn] = (isbnCount[isbn] || 0) + 1;
+    });
+
+    // Find ISBN with highest count
+    let maxCount = 0;
+    let bestSellerISBN = null;
+
+    for (const isbn in isbnCount) {
+      if (isbnCount[isbn] > maxCount) {
+        maxCount = isbnCount[isbn];
+        bestSellerISBN = isbn;
+      }
+    }
+
+    // Find the corresponding book title
+    if (bestSellerISBN) {
+      const bestSellerOrder = sellerOrders.find(order => order.isbn === bestSellerISBN);
+      if (bestSellerOrder?.bookInfo?.data?.volumeInfo?.title) {
+        return { 
+          title: bestSellerOrder.bookInfo.data.volumeInfo.title,
+          isbn: bestSellerISBN
+        };
+      }
+    }
+
+    return { title: "N/A", isbn: null };
+  };
+
+  const bestSeller = findBestSellerBook();
+
   const totalRevenue = sellerOrders?.reduce((sum, order) => sum + Number(order.price), 0) || 0;
   const monthlyRevenue = sellerOrders?.reduce((sum, order) => sum + Number(order.price) / 12, 0) || 0;
   const totalProfit = sellerOrders?.reduce((sum, order) => sum + Number(order.price) * 0.04, 0) || 0;
@@ -84,19 +135,19 @@ const SellerHome = () => {
     {
       title: "Monthly Revenue",
       value: `₹${monthlyRevenue.toFixed(2)}`,
-      icon: <FaRegFileAlt />,
+      icon: <FaMoneyCheck />,
       iconBg: "from-purple-400 to-purple-600",
     },
     {
       title: "Total Profit",
       value: `₹${totalProfit.toFixed(2)}`,
-      icon: <FaRegFolder />,
+      icon: <FaRupeeSign />,
       iconBg: "from-yellow-400 to-yellow-600",
     },
     {
       title: "Total Books",
       value: `${totalBooks}`,
-      icon: <FaRegClock />,
+      icon: <FaBook />,
       iconBg: "from-green-400 to-green-600",
     },
     {
@@ -107,8 +158,8 @@ const SellerHome = () => {
     },
     {
       title: "Best Seller",
-      value: "Doglapan",
-      icon: <FaRegClock />,
+      value: bestSeller.title, // Use the calculated best seller title
+      icon: <FaShoppingCart />,
       iconBg: "from-indigo-400 to-indigo-600",
     },
   ];
@@ -186,7 +237,7 @@ const SellerHome = () => {
             <CardContent className="p-6 flex justify-between items-center">
               <div>
                 <p className="text-sm text-gray-400">{stat.title}</p>
-                <p className="text-2xl font-semibold mt-1">{stat.value}</p>
+                <p className="text-2xl font-semibold">{stat.value}</p>
               </div>
               <div className={`flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-br ${stat.iconBg}`}>
                 {stat.icon}

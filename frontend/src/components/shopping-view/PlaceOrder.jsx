@@ -25,6 +25,7 @@ const PlaceOrder = () => {
       token: `Bearer ${token}`,
       sellerId,
       isbn,
+      quantity: 1,
       shippingAddress: data,
     };
 
@@ -56,8 +57,8 @@ const PlaceOrder = () => {
   };
 
   return (
-    <div className="p-6">
-      <p className="text-4xl px-80 font-bold mb-4">Ordering Book</p>
+    <div className="p-6 mt-[6rem]">
+      <p className="text-[3rem] px-80 font-bold mb-4">Ordering Book</p>
       <h2 className="text-2xl px-80 font-bold mb-4">Shipping Address</h2>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 mx-80">
         {/* Street */}
@@ -69,7 +70,7 @@ const PlaceOrder = () => {
             id="street"
             type="text"
             {...register("street", { required: "Street is required" })}
-            className="mt-1 p-2 border rounded w-full"
+            className="mt-1 p-2 border text-black rounded w-full"
           />
           {errors.street && (
             <p className="text-red-600 text-xs">{errors.street.message}</p>
@@ -85,7 +86,7 @@ const PlaceOrder = () => {
             id="city"
             type="text"
             {...register("city", { required: "City is required" })}
-            className="mt-1 p-2 border rounded w-full"
+            className="mt-1 p-2 border text-black rounded w-full"
           />
           {errors.city && (
             <p className="text-red-600 text-xs">{errors.city.message}</p>
@@ -101,7 +102,7 @@ const PlaceOrder = () => {
             id="state"
             type="text"
             {...register("state", { required: "State is required" })}
-            className="mt-1 p-2 border rounded w-full"
+            className="mt-1 p-2 border text-black rounded w-full"
           />
           {errors.state && (
             <p className="text-red-600 text-xs">{errors.state.message}</p>
@@ -117,7 +118,7 @@ const PlaceOrder = () => {
             id="country"
             type="text"
             {...register("country", { required: "Country is required" })}
-            className="mt-1 p-2 border rounded w-full"
+            className="mt-1 p-2 border text-black rounded w-full"
           />
           {errors.country && (
             <p className="text-red-600 text-xs">{errors.country.message}</p>
@@ -133,7 +134,7 @@ const PlaceOrder = () => {
             id="zipCode"
             type="text"
             {...register("zipCode", { required: "Zip Code is required" })}
-            className="mt-1 p-2 border rounded w-full"
+            className="mt-1 p-2 border text-black rounded w-full"
           />
           {errors.zipCode && (
             <p className="text-red-600 text-xs">{errors.zipCode.message}</p>

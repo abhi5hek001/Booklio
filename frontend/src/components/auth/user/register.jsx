@@ -53,7 +53,7 @@ function AuthRegisters() {
   };
 
   return (
-    <div className="w-full max-w-md space-y-6 bg-white p-8 shadow-md rounded-lg">
+    <div className="w-full max-w-md space-y-6 bg-white shadow-md rounded-lg">
       <Card>
         <CardHeader>
           <h2 className="text-2xl font-semibold text-center text-gray-800">Register User</h2>

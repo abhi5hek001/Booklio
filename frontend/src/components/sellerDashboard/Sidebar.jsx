@@ -1,11 +1,12 @@
 import { NavLink } from "react-router-dom";
-import { FaHome, FaBook, FaBoxOpen, FaUser, FaChartBar, FaDatabase, FaQuestionCircle, FaCog, FaSignOutAlt } from "react-icons/fa";
+import { FaHome, FaBook, FaUser, FaSignOutAlt, FaPlusCircle } from "react-icons/fa";
 import { IoReceiptOutline } from "react-icons/io5";
 import SellerAccount from "./SellerAccount";
 
 const Sidebar = () => {
   const menuItems = [
     { name: "Dashboard", icon: <FaHome size={18} />, path: "/seller" },
+    { name: "Add Book", icon: <FaPlusCircle size={18} />, path: "/seller/add-book" },
     { name: "Books", icon: <FaBook size={18} />, path: "/seller/books" },
     { name: "Orders", icon: <IoReceiptOutline size={18} />, path: "/seller/orders" },
   ];
@@ -13,7 +14,7 @@ const Sidebar = () => {
   return (
     <aside className="w-56 bg-[#1E1E1E] text-white h-screen flex flex-col">
       <div className="p-6">
-        <h1 className="text-xl font-semibold">Booklio</h1>
+        <h1 className="font-unbounded text-4xl font-semibold">Booklio</h1>
       </div>
       
       <nav className="flex-1 mt-4">

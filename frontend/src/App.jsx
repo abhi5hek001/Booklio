@@ -119,7 +119,7 @@ function App() {
         >
           <Route path="" element={<SellerHome />} />
           <Route path="books" element={<SellerBooksList />} />
-          <Route path="addbook" element={<AddBook />} />
+          <Route path="add-book" element={<AddBook />} />
           <Route path="Orders" element={<SellerOrders />} />
           <Route path="Account" element={<SellerAccount />} />
         </Route>

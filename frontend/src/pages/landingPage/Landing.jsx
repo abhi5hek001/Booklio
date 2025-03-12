@@ -18,7 +18,7 @@ function Landing() {
 
   return (
     <>
-      <main className='bg-background' >
+      <main className='bg-backgroundContrast' >
         <div className="bg-background relative z-10">
           <Hero />
           <Usps />

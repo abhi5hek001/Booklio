@@ -97,7 +97,7 @@ function ShoppingHome() {
 
 
   return (
-    <div className="flex flex-col justify-center items-center min-h-screen">
+    <div className="flex flex-col justify-center items-center min-h-screen mt-[6rem]">
       <div className="relative my-10 w-[80vw] h-[80vh] overflow-hidden">
         {featureImageList && featureImageList.length > 0
           ? featureImageList.map((slide, index) => (
@@ -119,7 +119,7 @@ function ShoppingHome() {
                 featureImageList.length
             )
           }
-          className="absolute top-1/2 left-4 transform -translate-y-1/2 bg-white/80"
+          className="absolute top-1/2 left-4 transform -translate-y-1/2 bg-backgroundContrast/50"
         >
           <ChevronLeftIcon className="w-4 h-4" />
         </Button>
@@ -131,7 +131,7 @@ function ShoppingHome() {
               (prevSlide) => (prevSlide + 1) % featureImageList.length
             )
           }
-          className="absolute top-1/2 right-4 transform -translate-y-1/2 bg-white/80"
+          className="absolute top-1/2 right-4 transform -translate-y-1/2 bg-backgroundContrast/50"
         >
           <ChevronRightIcon className="w-4 h-4" />
         </Button>

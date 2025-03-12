@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import PropTypes from "prop-types";
 import { useLocation } from "react-router-dom";
+import { FaArrowCircleRight, FaShoppingBasket } from "react-icons/fa";
 
 // Utility function to generate a random color
 const getRandomColor = () => {
@@ -43,7 +44,7 @@ const Navbar = ({ userData }) => {
             <li>
               <a
                 href="/user"
-                className={`text-xs px-4 py-2 rounded cursor-pointer ${
+                className={`flex items-center gap-2 text-xs px-4 py-2 rounded cursor-pointer ${
                   isActive("/user/orders") ? "bg-blue-600" : "bg-blue-600"
                 }`}
               >
@@ -53,11 +54,21 @@ const Navbar = ({ userData }) => {
             <li>
               <a
                 href="/user/orders"
-                className={`text-xs px-4 py-2 rounded cursor-pointer ${
+                className={`flex items-center gap-2 text-xs px-4 py-2 rounded cursor-pointer ${
                   isActive("/user/orders") ? "bg-blue-600" : "bg-blue-600"
                 }`}
               >
                 My Orders
+              </a>
+            </li>
+            <li>
+              <a
+                href="/shop/listing"
+                className={`flex items-center gap-2 text-xs px-4 py-2 rounded cursor-pointer ${isActive("/shop/listing") ? "bg-blue-700" : "bg-blue-600"
+                  } text-white`}
+              >
+                Shop More
+                <FaArrowCircleRight className="w-4 h-4" />
               </a>
             </li>
           </ul>

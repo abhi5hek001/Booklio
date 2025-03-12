@@ -29,6 +29,8 @@ const SellerOrders = () => {
   // Get orders from Redux
   const { sellerOrders, loading, error } = useSelector((state) => state.seller);
 
+  console.log(sellerOrders, "sellerOrders")
+
   useEffect(() => {
     if (sellerId) {
       dispatch(fetchSellerOrders(sellerId));
@@ -37,8 +39,6 @@ const SellerOrders = () => {
 
   if (loading)
     return <div className="text-center p-6 text-lg">Loading orders...</div>;
-  if (error)
-    return <div className="text-center text-red-500">Error: {error}</div>;
   if (!sellerOrders || sellerOrders.length === 0)
     return <div className="text-center">No orders available.</div>;
 
@@ -99,12 +99,10 @@ const SellerOrders = () => {
               <DialogTitle className="text-3xl font-bold mb-4">
                 Order Details
               </DialogTitle>
-              <DialogDescription className="mb-6">
               <p>
               <strong className="text-gray-100 text-sm">Details for Order ID:</strong>{" "}
               {selectedOrder.orderId}
               </p>
-              </DialogDescription>
             </DialogHeader>
             <div className="space-y-4">
               <p>
@@ -112,14 +110,18 @@ const SellerOrders = () => {
                 {selectedOrder.isbn}
               </p>
               <p>
+                <strong className="text-gray-100">Book:</strong>{" "}
+                {selectedOrder.bookInfo.data.volumeInfo.title || "N/A"}
+              </p>
+              <p>
                 <strong className="text-gray-100">Price:</strong>{" "}
-                <span className="text-lg font-semibold">
+                <span className="text-green-500 font-semibold">
                   ₹{selectedOrder.price}
                 </span>
               </p>
               <p>
                 <strong className="text-gray-100">Status:</strong>{" "}
-                <span className="text-green-500 font-semibold">Placed</span>
+                <span className="text-blue-500 font-semibold">Placed</span>
               </p>
               <p>
                 <strong className="text-gray-100">Customer:</strong>{" "}
