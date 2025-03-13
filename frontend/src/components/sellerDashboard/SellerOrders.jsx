@@ -49,12 +49,11 @@ const SellerOrders = () => {
           <TableRow>
             <TableHead className="py-4 px-6 text-left">Order ID</TableHead>
             <TableHead className="py-4 px-6 text-left">ISBN</TableHead>
-            <TableHead className="py-4 px-6 text-left">Price (₹)</TableHead>
+            <TableHead className="py-4 px-6 text-left">Total Price</TableHead>
+            <TableHead className="py-4 px-6 text-left">Quantity</TableHead>
             <TableHead className="py-4 px-6 text-left">Status</TableHead>
             <TableHead className="py-4 px-6 text-left">Customer</TableHead>
-            <TableHead className="py-4 px-6 text-left">
-              Shipping Address
-            </TableHead>
+            <TableHead className="py-4 px-6 text-left">Shipping Address</TableHead>
             <TableHead className="py-4 px-6 text-left">Order Date</TableHead>
           </TableRow>
         </TableHeader>
@@ -68,10 +67,13 @@ const SellerOrders = () => {
               <TableCell className="py-3 px-6">{order.orderId}</TableCell>
               <TableCell className="py-3 px-6">{order.isbn}</TableCell>
               <TableCell className="py-3 px-6 font-semibold">
-                ₹{order.price}
+                ₹ {order.price}
               </TableCell>
-              <TableCell className="py-3 px-6 text-green-500 font-semibold">
-                Placed
+              <TableCell className="py-3 px-6 font-semibold">
+                {order.quantity}
+              </TableCell>
+              <TableCell className={`py-3 px-6 text-${order.status == "pending" ? "orange" : order.status == "shipped" ? "purple" : order.status == "delivered" ? "blue" : order.status == "cancelled" ? "red" : order.status == "completed" ? "green" : ""}-500 font-semibold`}>
+                {order.status}
               </TableCell>
               <TableCell className="py-3 px-6">
                 <div className="font-medium">{order.user.name}</div>
@@ -96,12 +98,15 @@ const SellerOrders = () => {
         >
           <DialogContent className="max-w-lg p-8 rounded-lg shadow-xl bg-[#232323] text-white">
             <DialogHeader>
+              <div className="absolute z-10 -top-1 -left-2 bg-blue-500 text-white text-sm font-bold py-1 px-4 shadow-md before:z-5 before:content-[''] before:absolute before:-bottom-2 before:left-0 before:border-l-8 before:border-l-transparent before:border-t-8 before:border-t-blue-700">
+                {selectedOrder.status}
+              </div>
               <DialogTitle className="text-3xl font-bold mb-4">
                 Order Details
               </DialogTitle>
               <p>
-              <strong className="text-gray-100 text-sm">Details for Order ID:</strong>{" "}
-              {selectedOrder.orderId}
+                <strong className="text-gray-100 text-sm">Details for Order ID:</strong>{" "}
+                {selectedOrder.orderId}
               </p>
             </DialogHeader>
             <div className="space-y-4">
@@ -114,22 +119,30 @@ const SellerOrders = () => {
                 {selectedOrder.bookInfo.data.volumeInfo.title || "N/A"}
               </p>
               <p>
-                <strong className="text-gray-100">Price:</strong>{" "}
-                <span className="text-green-500 font-semibold">
-                  ₹{selectedOrder.price}
-                </span>
-              </p>
-              <p>
-                <strong className="text-gray-100">Status:</strong>{" "}
-                <span className="text-blue-500 font-semibold">Placed</span>
-              </p>
-              <p>
                 <strong className="text-gray-100">Customer:</strong>{" "}
                 {selectedOrder.user.name}
               </p>
               <p>
                 <strong className="text-gray-100">Mobile:</strong>{" "}
                 {selectedOrder.user.mobile}
+              </p>
+              <p>
+                <strong className="text-orange-500">Price of one book:</strong>{" "}
+                <span className="text-orange-500 font-semibold">
+                  ₹ {(selectedOrder.price) / selectedOrder.quantity}
+                </span>
+              </p>
+              <p>
+                <strong className="text-purple-400">Quantity:</strong>{" "}
+                <span className="text-purple-400 font-semibold">
+                  x{selectedOrder.quantity}
+                </span>
+              </p>
+              <p>
+                <strong className="text-green-500">Payable Amount:</strong>{" "}
+                <span className="text-green-500 font-semibold">
+                  ₹ {selectedOrder.price}
+                </span>
               </p>
               <p>
                 <strong className="text-gray-100">Shipping Address:</strong>

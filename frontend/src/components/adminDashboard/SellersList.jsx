@@ -12,7 +12,6 @@ import { MdModeEditOutline } from "react-icons/md";
 import { IoCloseCircle } from "react-icons/io5";
 import { MdDeleteForever } from "react-icons/md";
 import { FaFacebook, FaInstagram, FaLinkedin } from "react-icons/fa";
-import { sellersData } from "@/store/adminSlice/sellerData";
 import {
   Dialog,
   DialogTrigger,

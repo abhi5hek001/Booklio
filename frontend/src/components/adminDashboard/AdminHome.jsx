@@ -1,9 +1,5 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { booksData } from "@/store/adminSlice/booksData";
-import { sellersData } from "@/store/adminSlice/sellerData";
-import { usersData } from "@/store/adminSlice/usersData";
-import { managementsData } from "@/store/adminSlice/managementData";
 import { Card, CardContent } from "@/components/ui/card";
 import { Bar, Pie, Radar } from "react-chartjs-2";
 import {
@@ -36,80 +32,61 @@ ChartJS.register(
 
 const AdminHome = () => {
   const dispatch = useDispatch();
-
   const books = useSelector((state) => state.adminBooksData.value);
   const sellers = useSelector((state) => state.adminSellersData.value);
   const users = useSelector((state) => state.adminUsersData.value);
   const members = useSelector((state) => state.adminManagementsData.value);
 
+  // Generalized fetch function for all data
+  const fetchAllData = async () => {
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_BASE_URL}/admin/api/v1/get-batch-data`
+      );
+      const data = await response.json();
+      console.log(data)
+      if (data) {
+        if (data.users) {
+          dispatch(usersData(data.users));
+        }
+        if (data.sellers) {
+          dispatch(sellersData(data.sellers));
+        }
+        if (data.management) {
+          dispatch(managementsData(data.management));
+        }
+      } else {
+        // In case of an error or no data
+        dispatch(usersData([]));
+        dispatch(sellersData([]));
+        dispatch(managementsData([]));
+      }
+    } catch (error) {
+      console.error("Error fetching batch data:", error);
+    }
+  };
+
+  const fetchBooks = async () => {
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_BASE_URL}/book/api/v1/all-genre-book`
+      );
+      const data = await response.json();
+      // console.log(data)
+      if (data.success && data.bookData) {
+        const allBooks = Object.values(data.bookData).flat();
+        dispatch(booksData(allBooks));
+      } else {
+        dispatch(booksData([]));
+      }
+    } catch (error) {
+      console.error("Error fetching books:", error);
+    }
+  };
+
   useEffect(() => {
-    // Fetch books
-    const fetchBooks = async () => {
-      try {
-        const response = await fetch(
-          `${import.meta.env.VITE_BASE_URL}/book/api/v1/all-genre-book`
-        );
-        const data = await response.json();
-        if (data.success && data.bookData) {
-          const allBooks = Object.values(data.bookData).flat();
-          dispatch(booksData(allBooks));
-        } else {
-          dispatch(booksData([]));
-        }
-      } catch (error) {
-        console.error("Error fetching books:", error);
-      }
-    };
-
-    // Fetch sellers
-    const fetchSellers = async () => {
-      try {
-        const response = await fetch(
-          `${import.meta.env.VITE_BASE_URL}/admin/api/v1/get-member-data/`
-        );
-        const data = await response.json();
-        if (data.success && data.memberData) {
-          dispatch(sellersData(data.memberData));
-        }
-      } catch (error) {
-        console.error("Error fetching sellers:", error);
-      }
-    };
-
-    // Fetch users
-    const fetchUsers = async () => {
-      try {
-        const response = await fetch(
-          `${import.meta.env.VITE_BASE_URL}/admin/api/v1/get-user-data/`
-        );
-        const data = await response.json();
-        if (data.success && data.userData) {
-          dispatch(usersData(data.userData));
-        }
-      } catch (error) {
-        console.error("Error fetching users:", error);
-      }
-    };
-
-    // Fetch management data
-    const fetchManagement = async () => {
-      try {
-        const response = await fetch(
-          `${import.meta.env.VITE_BASE_URL}/admin/api/v1/get-member-data/`
-        );
-        const data = await response.json();
-        if (data.success && data.memberData) {
-          dispatch(managementsData(data.memberData));
-        }
-      } catch (error) {
-        console.error("Error fetching management data:", error);
-      }
-    };
-
     fetchBooks();
-    fetchSellers();
-    fetchUsers();
-    fetchManagement();
+    fetchAllData();
   }, [dispatch]);
 
   // Prepare data for bar chart (Books by Genre)

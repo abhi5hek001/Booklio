@@ -1,7 +1,6 @@
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { toast } from "react-hot-toast";
-import AddBookExcelImport from "./AddBookExcelImport";
 
 const AddBook = () => {
   const {
@@ -117,10 +116,6 @@ const AddBook = () => {
             placeholder="Available Stock"
           />
           {errors.price && <p className="text-sm text-red-500">{errors.stock.message}</p>}
-        </div>
-
-        <div>
-          <AddBookExcelImport/>
         </div>
 
         <button

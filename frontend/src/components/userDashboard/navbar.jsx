@@ -44,19 +44,17 @@ const Navbar = ({ userData }) => {
             <li>
               <a
                 href="/user"
-                className={`flex items-center gap-2 text-xs px-4 py-2 rounded cursor-pointer ${
-                  isActive("/user/orders") ? "bg-blue-600" : "bg-blue-600"
-                }`}
+                className={`flex items-center gap-2 text-xs px-4 py-2 rounded cursor-pointer ${location.pathname == "/user"? "hidden" : ""} ${isActive("/user") ? "bg-blue-600" : "bg-blue-600"
+                  }`}
               >
-                Account
+                My Account
               </a>
             </li>
             <li>
               <a
                 href="/user/orders"
-                className={`flex items-center gap-2 text-xs px-4 py-2 rounded cursor-pointer ${
-                  isActive("/user/orders") ? "bg-blue-600" : "bg-blue-600"
-                }`}
+                className={`flex items-center gap-2 text-xs px-4 py-2 rounded cursor-pointer ${location.pathname == "/user/orders"? "hidden" : ""} ${isActive("/user/orders") ? "bg-blue-600" : "bg-blue-600"
+                  }`}
               >
                 My Orders
               </a>
@@ -69,6 +67,11 @@ const Navbar = ({ userData }) => {
               >
                 Shop More
                 <FaArrowCircleRight className="w-4 h-4" />
+              </a>
+            </li>
+            <li>
+              <a onClick={handleLogout} className={`flex items-center gap-2 text-xs px-4 py-2 rounded cursor-pointer bg-red-600`}>
+                Logout
               </a>
             </li>
           </ul>
