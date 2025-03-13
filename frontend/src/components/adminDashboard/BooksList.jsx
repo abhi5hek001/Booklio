@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { booksData } from "@/store/adminSlice/booksData"; // Import the action from adminSlice
 import {
   Card,
   CardContent,
@@ -69,40 +70,32 @@ const BooksList = () => {
               }
             >
               <Card className="shadow-slate-500 flex flex-col justify-between z-10 w-full md:w-72 cursor-pointer relative">
-                <div className="relative">
-                  <div className="absolute z-10 -top-1 -left-2 bg-red-500 text-white text-sm font-bold py-1 px-4 shadow-md">
-                    ₹{book.spCluster?.[0]?.price || "Not available"}
-                  </div>
-                </div>
-                <CardHeader>
+                <CardHeader className="px-0 py-2 my-0" >
                   <img
                     src={book.data?.volumeInfo?.imageLinks?.thumbnail || "/default-image.jpg"}
                     alt={book.data?.volumeInfo?.title || "Untitled"}
                     className="w-full h-64 object-contain"
                   />
                 </CardHeader>
-                <CardContent className="p-4">
+                <CardContent className="my-0">
                   <h2 className="text-xl font-semibold text-gray-800">
                     {book.data?.volumeInfo?.title || "Untitled"}
                   </h2>
                   <p className="text-sm text-gray-600">{book.data?.volumeInfo?.authors?.join(", ") || "Unknown Author"}</p>
-                  <p className="text-sm text-gray-600">
-                    Stock : {book.spCluster?.[0]?.stock}
-                  </p>
                   <p className="mt-2 text-sm text-gray-500 line-clamp-3">
                     {book.data?.volumeInfo?.description || "No description available."}
                   </p>
                 </CardContent>
                 <DialogTrigger asChild>
                   <CardFooter className="flex justify-center items-center bg-blue-600 text-white p-4 rounded-b-lg border-t border-slate-300">
-                    <Button
+                    <a
                       className="flex items-center justify-center px-4 py-2 rounded-lg"
                       variant="primary"
                       size="sm"
                     >
                       <FaBook className="mr-2" />
                       View
-                    </Button>
+                    </a>
                   </CardFooter>
                 </DialogTrigger>
               </Card>

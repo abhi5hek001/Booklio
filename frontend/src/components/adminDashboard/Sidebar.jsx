@@ -14,7 +14,7 @@ const Sidebar = () => {
   ];
 
   return (
-    <aside className="hidden md:flex flex-col w-60 bg-gray-800 text-white h-screen shadow-lg"> 
+    <aside className="hidden md:flex flex-col w-60 bg-gray-800 text-white h-screen shadow-lg">
       <div className="p-6 text-xl font-bold">Admin Dashboard</div>
       <nav className="flex-1 mt-4">
         <ul className="space-y-2">
@@ -22,11 +22,11 @@ const Sidebar = () => {
             <li key={item.name}>
               <NavLink
                 to={item.path}
+                end
                 className={({ isActive }) =>
-                  `flex items-center px-4 py-3 text-sm font-medium rounded-lg transition ${
-                    isActive
-                      ? "bg-gray-700 text-white shadow-md"
-                      : "hover:bg-gray-600 hover:text-gray-200"
+                  `flex items-center px-5 py-3 mx-2 text-sm font-medium rounded-lg transition ${isActive
+                    ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white"
+                    : "text-gray-300 hover:bg-[#5a5a5a]"
                   }`
                 }
               >

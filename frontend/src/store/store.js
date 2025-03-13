@@ -1,11 +1,14 @@
 import { configureStore } from "@reduxjs/toolkit";
+import adminBooksReducer from './adminSlice/booksData'
+import adminManagementsReducer from './adminSlice/managementData'
+import adminSellersReducer from './adminSlice/sellerData'
+import adminUsersReducer from './adminSlice/usersData'
 
 import authReducer from './authSlice/user'
 import adminAuthReducer from './authSlice/admin'
 import sellerAuthReducer from './authSlice/seller/'
 
 import sellerReducer from './sellerSlice'
-import adminReducer from './adminSlice' // Import the new admin slice
 
 import shopProductsSlice from "./shop/products-slice";
 import shopCartSlice from "./shop/cart-slice";
@@ -16,12 +19,16 @@ import shopReviewSlice from "./shop/review-slice";
 
 const store = configureStore({
     reducer: {
+        adminBooksData: adminBooksReducer,
+        adminManagementsData: adminManagementsReducer,
+        adminSellersData: adminSellersReducer,
+        adminUsersData: adminUsersReducer,
+
         auth: authReducer,
         adminAuth: adminAuthReducer,
         sellerAuth: sellerAuthReducer,
 
         seller: sellerReducer,
-        adminReducer, 
 
         shopProducts: shopProductsSlice,
         shopCart: shopCartSlice,

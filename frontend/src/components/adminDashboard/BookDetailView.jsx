@@ -10,7 +10,7 @@ import {
 import { IoCloseCircle } from "react-icons/io5"; // Close icon
 
 const BookDetailView = ({ book, selectedBook, setSelectedBook, getSellerInfo }) => {
-  const { data, spCluster, isbn } = book;
+  const { data, spCluster, id, isbn } = book;
   const title = data?.volumeInfo?.title || "Untitled";
   const authors = data?.volumeInfo?.authors?.join(", ") || "Unknown Author";
   const description = data?.volumeInfo?.description || "No description available.";
@@ -23,90 +23,87 @@ const BookDetailView = ({ book, selectedBook, setSelectedBook, getSellerInfo }) 
   const infoLink = data?.volumeInfo?.infoLink || "#";
 
   return (
-    <DialogContent className="max-w-[90%] lg:max-w-[70%] min-h-[75vh] p-6 bg-white rounded-2xl shadow-xl">
+    <DialogContent className="max-w-4xl p-8 bg-white rounded-lg shadow-lg">
       <DialogHeader>
-        <DialogTitle className="text-2xl font-bold text-gray-900">{title}</DialogTitle>
+        <DialogTitle className="text-3xl font-semibold text-gray-800">{title}</DialogTitle>
       </DialogHeader>
-
-      <DialogDescription className="text-gray-700">
-        <div className="flex flex-col lg:flex-row gap-6">
+      <DialogDescription className="text-gray-600">
+        <div className="flex gap-8">
           {/* Image Section */}
-          <div className="flex-shrink-0 lg:w-1/3">
+          <div className="flex-shrink-0 w-1/3 pr-10">
             <img
               src={imageUrl}
               alt={title}
-              className="w-full h-auto object-contain rounded-lg shadow-md"
+              className="w-full h-auto object-contain mb-4 rounded-lg shadow-md"
             />
           </div>
 
           {/* Details Section */}
-          <div className="flex-1 space-y-3">
+          <div className="w-2/3">
             <p>
-              <strong className="text-gray-900">Authors:</strong> {authors}
+              <strong className="text-gray-800">Authors:</strong> {authors}
             </p>
-            <p>
-              <strong className="text-gray-900">Description:</strong>{" "}
-              {description.split(" ").slice(0, 25).join(" ")}...
+            <p className="mt-2">
+              <strong className="text-gray-800">Description:</strong>{" "}
+              {description.split(" ").slice(0, 20).join(" ")}...
             </p>
-            <p>
-              <strong className="text-gray-900">ISBN:</strong> {isbn || "Not available"}
+            <p className="mt-2">
+              <strong className="text-gray-800">ISBN:</strong> {isbn || "Not available"}
             </p>
-            <p>
-              <strong className="text-gray-900">Publisher:</strong> {publisher}
+            <p className="mt-2">
+              <strong className="text-gray-800">Publisher:</strong> {publisher}
             </p>
-            <p>
-              <strong className="text-gray-900">Published Date:</strong> {publishedDate}
+            <p className="mt-2">
+              <strong className="text-gray-800">Published Date:</strong> {publishedDate}
             </p>
-            <p>
-              <strong className="text-gray-900">Maturity Rating:</strong> {maturityRating}
+            <p className="mt-2">
+              <strong className="text-gray-800">Maturity Rating:</strong> {maturityRating}
             </p>
-            <p>
-              <strong className="text-gray-900">Language:</strong> {language}
+            <p className="mt-2">
+              <strong className="text-gray-800">Language:</strong> {language}
             </p>
-            <p>
-              <strong className="text-gray-900">Genre:</strong>{" "}
+            <p className="mt-2">
+              <strong className="text-gray-800">Genre:</strong>{" "}
               {Array.isArray(genre) ? genre.join(", ") : genre}
             </p>
-            <p>
-              <strong className="text-gray-900">More Info:</strong>{" "}
+            <p className="mt-2">
+              <strong className="text-gray-800">More Info:</strong>{" "}
               <a
                 href={infoLink}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-blue-600 hover:underline"
+                className="text-blue-500 underline hover:text-blue-700"
               >
                 View on Google Books
               </a>
             </p>
 
-            {/* Seller Details */}
-            <div className="mt-6">
-              <strong className="text-gray-900 text-lg">Sellers:</strong>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
-                {spCluster.map((sellerCluster, idx) => {
-                  const seller = getSellerInfo(sellerCluster.sellerId);
-                  return seller ? (
-                    <div key={idx} className="p-4 bg-gray-50 border rounded-lg shadow-sm">
-                      <p className="font-semibold text-gray-900">
-                        {seller.storeName
-                          ? seller.storeName.replace(/\b\w/g, (char) => char.toUpperCase())
-                          : "Anonymous Store"}
-                      </p>
-                      <p className="text-blue-500">Price: ₹{sellerCluster.price || "N/A"}</p>
-                      <p className="text-orange-500">Stock: {sellerCluster.stock || "N/A"}</p>
-                    </div>
-                  ) : null;
-                })}
-              </div>
+            <div className="mt-4">
+              <strong className="text-gray-800">Sellers:</strong>
+              {spCluster.map((sellerCluster, idx) => {
+                const seller = getSellerInfo(sellerCluster.sellerId);
+                return seller ? (
+                  <div key={idx} className="mt-4 bg-gray-50 p-4 rounded-md shadow-sm">
+                    <p>
+                      <strong className="text-gray-800">{seller.storeName || "Unnamed Store"}</strong>
+                    </p>
+                    <p className="text-orange-500 font-bold">
+                      Price: ₹{sellerCluster.price || "Not available"}
+                    </p>
+                    <p className="text-blue-500">
+                      Stock: {sellerCluster.stock || "Not available"}
+                    </p>
+                  </div>
+                ) : null;
+              })}
             </div>
           </div>
         </div>
       </DialogDescription>
-
-      <DialogFooter className="flex justify-end">
+      <DialogFooter>
         <Button
           variant="outline"
-          className="rounded-lg bg-red-500 text-white hover:bg-red-600 transition-all"
+          className="mr-4 rounded-xl bg-red-500 text-white hover:bg-red-600 transition-all duration-200"
           onClick={() => setSelectedBook(null)}
         >
           Close

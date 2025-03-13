@@ -28,7 +28,7 @@ const Sidebar = () => {
                   `flex items-center px-5 py-3 mx-2 text-sm font-medium rounded-lg transition ${
                     isActive
                       ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white"
-                      : "text-gray-300 hover:bg-[#2A2A2A]"
+                      : "text-gray-300 hover:bg-[#5a5a5a]"
                   }`
                 }
               >
