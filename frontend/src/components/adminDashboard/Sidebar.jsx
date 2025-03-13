@@ -1,13 +1,13 @@
 import { NavLink } from "react-router-dom";
-import { FaHome, FaBook, FaStore, FaSignOutAlt } from "react-icons/fa";
-import { MdManageAccounts } from "react-icons/md";
+import { FaHome, FaBook, FaStore, FaSignOutAlt, FaSearchDollar, FaChartLine, FaBookOpen, FaBookReader, FaBookmark } from "react-icons/fa";
+import { MdFormatIndentIncrease, MdManageAccounts } from "react-icons/md";
 import { PiUsersFill } from "react-icons/pi";
 
 const Sidebar = () => {
   const menuItems = [
     { name: "Home", icon: <FaHome />, path: "/admin" },
-    { name: "Sales", icon: <FaStore />, path: "/admin/sales" },
-    { name: "Books", icon: <FaBook />, path: "/admin/books" },
+    { name: "Sales", icon: <FaChartLine />, path: "/admin/sales" },
+    { name: "Books", icon: <FaBookmark />, path: "/admin/books" },
     { name: "Sellers", icon: <FaStore />, path: "/admin/sellers" },
     { name: "Management", icon: <MdManageAccounts />, path: "/admin/management" },
     { name: "Users", icon: <PiUsersFill />, path: "/admin/users" },
