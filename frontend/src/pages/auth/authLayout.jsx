@@ -26,7 +26,7 @@ function AuthLayout() {
       </div>
 
       {/* Right Section (Login Form) */}
-      <div className="flex flex-1 items-center justify-center bg-gray-50 px-4 py-12 sm:px-6 lg:px-8">
+      <div className="flex flex-1 items-center justify-center bg-backgroundContrast px-4 py-4 sm:px-6 lg:px-8">
         <Outlet />
       </div>
     </div>

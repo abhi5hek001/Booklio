@@ -10,7 +10,7 @@ import { toast } from "react-hot-toast";
 function SellerRegister() {
   const [currentPage, setCurrentPage] = useState(1);
   const navigate = useNavigate();
-  
+
   const {
     control,
     handleSubmit,
@@ -43,17 +43,17 @@ function SellerRegister() {
 
   const handleNextPage = async (nextPage) => {
     let fieldsToValidate = [];
-    
+
     // Define fields to validate for each page
     if (currentPage === 1) {
       fieldsToValidate = ["name", "email", "mobile", "password"];
     } else if (currentPage === 2) {
       fieldsToValidate = ["storeName", "upiId", "storeDescription", "gstNumber"];
     }
-    
+
     // Trigger validation for current page fields
     const isValid = await trigger(fieldsToValidate);
-    
+
     if (isValid) {
       setCurrentPage(nextPage);
     }
@@ -121,7 +121,7 @@ function SellerRegister() {
   const renderPageOne = () => (
     <div className="space-y-4">
       <h3 className="text-lg font-medium text-gray-700 mb-4">Personal Information</h3>
-      
+
       <div className="flex space-x-4">
         <div className="w-1/2">
           <Label htmlFor="name" className="text-gray-600">Name</Label>
@@ -215,9 +215,9 @@ function SellerRegister() {
       </div>
 
       <div className="flex justify-center mt-4">
-        <Button 
-          type="button" 
-          onClick={() => handleNextPage(2)} 
+        <Button
+          type="button"
+          onClick={() => handleNextPage(2)}
           className="w-full bg-blue-600 text-white hover:bg-blue-700"
         >
           Next
@@ -230,7 +230,7 @@ function SellerRegister() {
   const renderPageTwo = () => (
     <div className="space-y-4">
       <h3 className="text-lg font-medium text-gray-700 mb-4">Store Information</h3>
-      
+
       <div className="flex space-x-4">
         <div className="w-1/2">
           <Label htmlFor="storeName" className="text-gray-600">Store Name</Label>
@@ -305,16 +305,16 @@ function SellerRegister() {
       </div>
 
       <div className="flex justify-between space-x-4 mt-4">
-        <Button 
-          type="button" 
-          onClick={handlePrevPage} 
+        <Button
+          type="button"
+          onClick={handlePrevPage}
           className="w-1/2 bg-gray-500 text-white hover:bg-gray-600"
         >
           Back
         </Button>
-        <Button 
-          type="button" 
-          onClick={() => handleNextPage(3)} 
+        <Button
+          type="button"
+          onClick={() => handleNextPage(3)}
           className="w-1/2 bg-blue-600 text-white hover:bg-blue-700"
         >
           Next
@@ -327,7 +327,7 @@ function SellerRegister() {
   const renderPageThree = () => (
     <div className="space-y-4">
       <h3 className="text-lg font-medium text-gray-700 mb-4">Social Media & Address</h3>
-      
+
       {/* Social Media Links */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {["facebook", "instagram", "linkedin"].map((social) => (
@@ -383,15 +383,15 @@ function SellerRegister() {
       </div>
 
       <div className="flex justify-between space-x-4 mt-4">
-        <Button 
-          type="button" 
-          onClick={handlePrevPage} 
+        <Button
+          type="button"
+          onClick={handlePrevPage}
           className="w-1/2 bg-gray-500 text-white hover:bg-gray-600"
         >
           Back
         </Button>
-        <Button 
-          type="submit" 
+        <Button
+          type="submit"
           className="w-1/2 bg-blue-600 text-white hover:bg-blue-700"
         >
           Register
@@ -401,34 +401,39 @@ function SellerRegister() {
   );
 
   return (
-    <div className="w-full space-y-6 bg-white shadow-md rounded-lg">
-      <Card>
-        <CardHeader>
-          <h2 className="text-2xl font-semibold text-center text-gray-800">Register as Seller</h2>
-          <div className="flex justify-center mt-2">
-            <div className="flex items-center">
-              <div className={`w-8 h-8 rounded-full flex items-center justify-center ${currentPage >= 1 ? 'bg-blue-600 text-white' : 'bg-gray-300'}`}>1</div>
-              <div className={`w-10 h-1 ${currentPage >= 2 ? 'bg-blue-600' : 'bg-gray-300'}`}></div>
-              <div className={`w-8 h-8 rounded-full flex items-center justify-center ${currentPage >= 2 ? 'bg-blue-600 text-white' : 'bg-gray-300'}`}>2</div>
-              <div className={`w-10 h-1 ${currentPage === 3 ? 'bg-blue-600' : 'bg-gray-300'}`}></div>
-              <div className={`w-8 h-8 rounded-full flex items-center justify-center ${currentPage === 3 ? 'bg-blue-600 text-white' : 'bg-gray-300'}`}>3</div>
+    <div className="w-full flex flex-col justify-center items-center max-w-md space-y-2">
+      <a href="/">
+        <p className="text-[4rem] text-blue-500 font-bold font-unbounded">Booklio</p>
+      </a>
+      <div className="bg-white w-[140%] shadow-md rounded-lg">
+        <Card>
+          <CardHeader>
+            <h2 className="text-2xl font-semibold text-center text-gray-800">Register as Seller</h2>
+            <div className="flex justify-center">
+              <div className="flex items-center">
+                <div className={`w-8 h-8 rounded-full flex items-center justify-center ${currentPage >= 1 ? 'bg-blue-600 text-white' : 'bg-gray-300'}`}>1</div>
+                <div className={`w-10 h-1 ${currentPage >= 2 ? 'bg-blue-600' : 'bg-gray-300'}`}></div>
+                <div className={`w-8 h-8 rounded-full flex items-center justify-center ${currentPage >= 2 ? 'bg-blue-600 text-white' : 'bg-gray-300'}`}>2</div>
+                <div className={`w-10 h-1 ${currentPage === 3 ? 'bg-blue-600' : 'bg-gray-300'}`}></div>
+                <div className={`w-8 h-8 rounded-full flex items-center justify-center ${currentPage === 3 ? 'bg-blue-600 text-white' : 'bg-gray-300'}`}>3</div>
+              </div>
             </div>
-          </div>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit(onSubmit)}>
-            {currentPage === 1 && renderPageOne()}
-            {currentPage === 2 && renderPageTwo()}
-            {currentPage === 3 && renderPageThree()}
-          </form>
-        </CardContent>
-        <CardFooter className="text-center">
-          <p className="text-sm">
-            Already have an account?{" "}
-            <Link to="/auth/seller/login" className="text-blue-600 hover:underline">Login here</Link>
-          </p>
-        </CardFooter>
-      </Card>
+          </CardHeader>
+          <CardContent>
+            <form onSubmit={handleSubmit(onSubmit)}>
+              {currentPage === 1 && renderPageOne()}
+              {currentPage === 2 && renderPageTwo()}
+              {currentPage === 3 && renderPageThree()}
+            </form>
+          </CardContent>
+          <CardFooter className="text-center">
+            <p className="text-sm">
+              Already have an account?{" "}
+              <Link to="/auth/seller/login" className="text-blue-600 hover:underline">Login here</Link>
+            </p>
+          </CardFooter>
+        </Card>
+      </div>
     </div>
   );
 }
