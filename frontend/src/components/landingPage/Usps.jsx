@@ -3,7 +3,7 @@ import { FadeIn } from "@/components/landingPage/FadeIn";
 
 export const Usps = () => {
     return (
-        <Container className="relative z-10 text-3xl md:text-4xl font-bold space-y-1 bg-background text-white max-w-[692px] mt-20 py-16">
+        <Container className="relative z-10 text-3xl md:text-4xl font-bold space-y-1 bg-backgroundContrast text-white max-w-[692px] mt-20 py-16">
             <FadeIn>
                 <p className="py-5">Explore top-rated titles across all genres, from bestsellers to hidden gems — all in one place.</p>
             </FadeIn>

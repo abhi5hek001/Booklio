@@ -28,7 +28,9 @@ export const Header = () => {
             <header id="header" className="bg-backgroundContrast text-white relative z-20">
             <div className="sticky top-0 z-20 bg-backgroundContrast text-white">
                 <Container className="flex justify-between items-center min-h-[--header-row-height]">
-                    <p className="font-unbounded py-4 text-4xl font-semibold">Booklio</p>
+                    <a href="/">
+                        <p className="font-unbounded py-4 text-4xl font-semibold">Booklio</p>
+                    </a>
                     {isLoggedIn ? (
                         <a className="text-xs px-2 py-1 rounded cursor-pointer bg-red-600" onClick={handleLogout}>Logout</a>
                     ) : (

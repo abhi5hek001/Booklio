@@ -21,6 +21,7 @@ const Navbar = ({ userData }) => {
 
   const handleLogout = () => {
     localStorage.removeItem("accessToken");
+    localStorage.removeItem("role");
     window.location.href = "/";
   };
 
@@ -33,48 +34,49 @@ const Navbar = ({ userData }) => {
 
   return (
     <nav className="bg-backgroundContrast text-white shadow-[0_4px_6px_-1px_rgba(0,0,0,0.1),0_1px_0_rgba(0,0,0,0.08)]">
-      <div className="container mx-auto px-6 py-4 flex justify-between items-center w-[80%] min-h-[--header-row-height]">
-        <div className="flex items-center space-x-8">
-          <a href="/shop" className="text-4xl font-unbounded font-bold text-white">
-            Booklio
-          </a>
-        </div>
-        <div className="relative flex justify-center items-center gap-4">
-          <ul className="flex space-x-4">
-            <li>
-              <a
-                href="/user"
-                className={`flex items-center gap-2 text-xs px-4 py-2 rounded cursor-pointer ${location.pathname == "/user"? "hidden" : ""} ${isActive("/user") ? "bg-blue-600" : "bg-blue-600"
-                  }`}
-              >
-                My Account
-              </a>
-            </li>
-            <li>
-              <a
-                href="/user/orders"
-                className={`flex items-center gap-2 text-xs px-4 py-2 rounded cursor-pointer ${location.pathname == "/user/orders"? "hidden" : ""} ${isActive("/user/orders") ? "bg-blue-600" : "bg-blue-600"
-                  }`}
-              >
-                My Orders
-              </a>
-            </li>
-            <li>
-              <a
-                href="/shop/listing"
-                className={`flex items-center gap-2 text-xs px-4 py-2 rounded cursor-pointer ${isActive("/shop/listing") ? "bg-blue-700" : "bg-blue-600"
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex flex-col sm:flex-row justify-between items-center py-3 sm:py-4 gap-4 sm:gap-0">
+          {/* Logo */}
+          <div className="flex items-center">
+            <a href="/shop" className="text-2xl sm:text-3xl md:text-4xl font-unbounded font-bold text-white">
+              Booklio
+            </a>
+          </div>
+
+          {/* Navigation */}
+          <div className="flex items-center justify-center gap-2 sm:gap-4">
+            <ul className="flex flex-wrap justify-center gap-2 sm:gap-4">
+              <li>
+                <a
+                  href="/user"
+                  className={`flex items-center gap-1 sm:gap-2 text-xs sm:text-sm px-3 sm:px-4 py-1.5 sm:py-2 rounded cursor-pointer transition-colors ${
+                    location.pathname === "/user" ? "hidden" : ""
+                  } ${isActive("/user") ? "bg-blue-600" : "bg-blue-600"}`}
+                >
+                  My Account
+                </a>
+              </li>
+              <li>
+                <a
+                  href="/shop/listing"
+                  className={`flex items-center gap-1 sm:gap-2 text-xs sm:text-sm px-3 sm:px-4 py-1.5 sm:py-2 rounded cursor-pointer transition-colors ${
+                    isActive("/shop/listing") ? "bg-blue-700" : "bg-blue-600"
                   } text-white`}
-              >
-                Shop More
-                <FaArrowCircleRight className="w-4 h-4" />
-              </a>
-            </li>
-            <li>
-              <a onClick={handleLogout} className={`flex items-center gap-2 text-xs px-4 py-2 rounded cursor-pointer bg-red-600`}>
-                Logout
-              </a>
-            </li>
-          </ul>
+                >
+                  Shop
+                  <FaArrowCircleRight className="w-3 h-3 sm:w-4 sm:h-4" />
+                </a>
+              </li>
+              <li>
+                <a
+                  onClick={handleLogout}
+                  className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm px-3 sm:px-4 py-1.5 sm:py-2 rounded cursor-pointer bg-red-600 hover:bg-red-700 transition-colors"
+                >
+                  Logout
+                </a>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
     </nav>

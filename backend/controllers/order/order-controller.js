@@ -429,6 +429,139 @@ const cancelOrder = async (req, res) => {
  *         description: Server error
  */
 
+// const sellerOrderList = async (req, res) => {
+//   try {
+//     // Validate the request
+//     const valErrors = validationResult(req);
+//     if (!valErrors.isEmpty()) {
+//       return res.status(400).json({
+//         success: false,
+//         msg: "Validation errors",
+//         errors: valErrors.array(),
+//       });
+//     }
+
+//     const sellerId = req.params.sellerId;
+
+//     // Check if the seller exists
+//     const sellerExists = await Seller.findOne({ sellerId });
+//     if (!sellerExists) {
+//       return res.status(404).json({
+//         success: false,
+//         msg: "Seller not found.",
+//       });
+//     }
+
+//     // Fetch orders, seller data, user data, and book info
+//     const result = await Order.aggregate([
+//       {
+//         $match: { sellerId: sellerId }, // Match the specific sellerId
+//       },
+//       {
+//         $lookup: {
+//           from: "sellers", // Ensure this matches the actual collection name
+//           localField: "sellerId", // Field in Order collection
+//           foreignField: "sellerId", // Field in Seller collection
+//           as: "orderData", // Alias for joined seller data
+//         },
+//       },
+//       {
+//         $unwind: "$orderData", // Flatten the orderData array
+//       },
+//       {
+//         $lookup: {
+//           from: "users", // Users collection
+//           localField: "userId", // Field in Order collection
+//           foreignField: "userId", // Field in User collection
+//           as: "userData", // Alias for joined user data
+//         },
+//       },
+//       {
+//         $unwind: "$userData", // Flatten the userData array
+//       },
+//       {
+//         $lookup: {
+//           from: "books", // Books collection
+//           localField: "isbn", // Field in Order collection
+//           foreignField: "isbn", // Field in Book collection
+//           as: "bookData", // Alias for joined book data
+//         },
+//       },
+//       {
+//         $unwind: {
+//           path: "$bookData",
+//           preserveNullAndEmptyArrays: true, // Keep order even if book not found
+//         },
+//       },
+//       {
+//         $group: {
+//           _id: "$sellerId", // Group by sellerId
+//           orders: {
+//             $push: {
+//               orderId: "$orderId",
+//               isbn: "$isbn",
+//               price: "$price",
+//               quantity: "$quantity",
+//               user: { // Include full user details
+//                 userId: "$userData.userId",
+//                 name: "$userData.name",
+//                 email: "$userData.email",
+//                 mobile: "$userData.mobile",
+//                 address: "$userData.address",
+//               },
+//               bookInfo: { // Include book details
+//                 data: "$bookData.data",
+//                 genre: "$bookData.genre",
+//                 spCluster: "$bookData.spCluster",
+//               },
+//               shippingAddress: "$shippingAddress",
+//               status: "$status",
+//               createdAt: "$createdAt",
+//               updatedAt: "$updatedAt",
+//             },
+//           },
+//           sellerInfo: {
+//             $first: {
+//               email: "$orderData.email",
+//               name: "$orderData.name",
+//               mobile: "$orderData.mobile",
+//               storeName: "$orderData.storeName",
+//               storeDescription: "$orderData.storeDescription",
+//               image: "$orderData.image",
+//               upiId: "$orderData.upiId",
+//               address: "$orderData.address",
+//               gstNumber: "$orderData.gstNumber",
+//               socialMediaLinks: "$orderData.socialMediaLinks",
+//               is_verified: "$orderData.is_verified",
+//               role: "$orderData.role",
+//               createdAt: "$orderData.createdAt",
+//             },
+//           },
+//         },
+//       },
+//       {
+//         $project: {
+//           _id: 0, // Remove the _id field
+//           sellerId: "$_id", // Rename _id to sellerId
+//           orders: 1, // Include orders array
+//           sellerInfo: 1, // Include seller info
+//         },
+//       },
+//     ]);
+
+//     res.status(200).json({
+//       success: true,
+//       data: result,
+//     });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({
+//       success: false,
+//       msg: "Server error",
+//     });
+//   }
+// };
+
 
 const sellerOrderList = async (req, res) => {
   try {
@@ -454,64 +587,60 @@ const sellerOrderList = async (req, res) => {
     }
 
     // Fetch orders, seller data, user data, and book info
-    const result = await Order.aggregate([
+    let result = await Order.aggregate([
       {
-        $match: { sellerId: sellerId }, // Match the specific sellerId
+        $match: { sellerId: sellerId },
       },
       {
         $lookup: {
-          from: "sellers", // Ensure this matches the actual collection name
-          localField: "sellerId", // Field in Order collection
-          foreignField: "sellerId", // Field in Seller collection
-          as: "orderData", // Alias for joined seller data
+          from: "sellers",
+          localField: "sellerId",
+          foreignField: "sellerId",
+          as: "orderData",
         },
       },
-      {
-        $unwind: "$orderData", // Flatten the orderData array
-      },
+      { $unwind: "$orderData" },
       {
         $lookup: {
-          from: "users", // Users collection
-          localField: "userId", // Field in Order collection
-          foreignField: "userId", // Field in User collection
-          as: "userData", // Alias for joined user data
+          from: "users",
+          localField: "userId",
+          foreignField: "userId",
+          as: "userData",
         },
       },
-      {
-        $unwind: "$userData", // Flatten the userData array
-      },
+      { $unwind: "$userData" },
       {
         $lookup: {
-          from: "books", // Books collection
-          localField: "isbn", // Field in Order collection
-          foreignField: "isbn", // Field in Book collection
-          as: "bookData", // Alias for joined book data
+          from: "books",
+          localField: "isbn",
+          foreignField: "isbn",
+          as: "bookData",
         },
       },
       {
         $unwind: {
           path: "$bookData",
-          preserveNullAndEmptyArrays: true, // Keep order even if book not found
+          preserveNullAndEmptyArrays: true,
         },
       },
       {
         $group: {
-          _id: "$sellerId", // Group by sellerId
+          _id: "$sellerId",
           orders: {
             $push: {
               orderId: "$orderId",
               isbn: "$isbn",
               price: "$price",
               quantity: "$quantity",
-              user: { // Include full user details
+              user: {
                 userId: "$userData.userId",
                 name: "$userData.name",
                 email: "$userData.email",
                 mobile: "$userData.mobile",
                 address: "$userData.address",
               },
-              bookInfo: { // Include book details
-                data: "$bookData.data",
+              bookInfo: {
+                title: "$bookData.data",
                 genre: "$bookData.genre",
                 spCluster: "$bookData.spCluster",
               },
@@ -542,13 +671,52 @@ const sellerOrderList = async (req, res) => {
       },
       {
         $project: {
-          _id: 0, // Remove the _id field
-          sellerId: "$_id", // Rename _id to sellerId
-          orders: 1, // Include orders array
-          sellerInfo: 1, // Include seller info
+          _id: 0,
+          sellerId: "$_id",
+          orders: 1,
+          sellerInfo: 1,
         },
       },
     ]);
+
+    // Process data to find the most sold book and total price correctly
+    if (result.length > 0) {
+      let allOrders = result[0].orders;
+      let bookSales = {};
+
+      allOrders.forEach(order => {
+        const { isbn, quantity, price, bookInfo } = order;
+        if (!isbn || !bookInfo || quantity === 0) return;
+
+        // Correct price per book calculation
+        const pricePerBook = price / quantity;
+
+        if (!bookSales[isbn]) {
+          bookSales[isbn] = {
+            totalSold: 0,
+            totalPrice: 0,
+            details: bookInfo,
+          };
+        }
+
+        bookSales[isbn].totalSold += quantity;
+        bookSales[isbn].totalPrice += pricePerBook * quantity; // Corrected price calculation
+      });
+
+      // Find the highest sold book
+      let hotSellingBook = Object.entries(bookSales)
+        .sort((a, b) => b[1].totalSold - a[1].totalSold)
+        .map(([isbn, data]) => ({
+          isbn,
+          totalCopiesSold: data.totalSold,
+          totalPriceEarned: data.totalPrice.toFixed(2), // Format to 2 decimal places
+          details: data.details,
+        }))[0];
+
+      if (hotSellingBook) {
+        result[0].hotSellingBook = hotSellingBook;
+      }
+    }
 
     res.status(200).json({
       success: true,
@@ -563,8 +731,7 @@ const sellerOrderList = async (req, res) => {
   }
 };
 
-
-//=========================== User Order List
+//========================== User Order List
 
 /**
  * @swagger
