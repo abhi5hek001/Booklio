@@ -1,4 +1,4 @@
-name: Deploy Backend to EC2
+name: Deploy Backend & Frontend to EC2
 
 on:
   push:
@@ -20,7 +20,17 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_KEY }}
           script: |
+            # ----- Backend -----
             cd ~/Booklio/backend
             git pull origin main
             npm install
             pm2 restart booklio-backend || pm2 start server.js --name booklio-backend
+
+            # ----- Frontend -----
+            cd ~/Booklio/frontend
+            git pull origin main
+            npm install
+            # Kill previous frontend if running
+            npx kill-port 5174 || true
+            # Start frontend on port 5174
+            npm run dev -- --port 5174 &
