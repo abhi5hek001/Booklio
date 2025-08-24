@@ -18,6 +18,6 @@ const blacklistSchema = new mongoose.Schema(
 );
 
 // Create the TTL index on the 'createdAt' field
-blacklistSchema.index({ createdAt: 1 }, { expireAfterSeconds: 86400 });
+// blacklistSchema.index({ createdAt: 1 }, { expireAfterSeconds: 86400 });
 
 module.exports = mongoose.model("Blacklist", blacklistSchema);
