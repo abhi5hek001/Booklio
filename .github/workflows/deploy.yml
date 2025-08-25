@@ -30,7 +30,5 @@ jobs:
             cd ~/Booklio/frontend
             git pull origin main
             npm install
-            # Kill previous frontend if running
             npx kill-port 5174 || true
-            # Start frontend on port 5174
-            npm run dev -- --port 5174 &
+            nohup npm run dev -- --port 5174 > ~/Booklio/frontend/frontend.log 2>&1 &
