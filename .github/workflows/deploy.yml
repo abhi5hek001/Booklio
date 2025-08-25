@@ -2,77 +2,40 @@ name: Deploy to EC2
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ main ]
 
 jobs:
-  build-and-deploy:
+  deploy:
     runs-on: ubuntu-latest
-    env:
-      DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
-      DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-      FRONTEND_IMAGE: ${{ secrets.DOCKERHUB_USERNAME }}/app-frontend:latest
-      BACKEND_IMAGE: ${{ secrets.DOCKERHUB_USERNAME }}/app-backend:latest
-      EC2_HOST: ${{ secrets.EC2_HOST }}
-      EC2_USER: ${{ secrets.EC2_USER }}
-      APP_DIR: ${{ secrets.APP_DIR || '/opt/app' }}
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Login to Docker Hub
-        uses: docker/login-action@v3
+      - name: Log in to DockerHub
+        uses: docker/login-action@v2
         with:
-          username: ${{ env.DOCKERHUB_USERNAME }}
-          password: ${{ env.DOCKERHUB_TOKEN }}
+          username: ${{ secrets.DOCKER_HUB_USERNAME }}
+          password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
 
-      - name: Build & push backend
-        uses: docker/build-push-action@v6
-        with:
-          context: ./backend
-          file: ./backend/Dockerfile
-          push: true
-          tags: ${{ env.BACKEND_IMAGE }}
+      - name: Build & Push backend
+        run: |
+          docker build -t abhi5hek001/app-backend:latest ./backend
+          docker push abhi5hek001/app-backend:latest
 
-      - name: Build & push frontend
-        uses: docker/build-push-action@v6
-        with:
-          context: ./frontend
-          file: ./frontend/Dockerfile
-          push: true
-          tags: ${{ env.FRONTEND_IMAGE }}
-
-      - name: Copy compose & nginx to EC2
-        uses: appleboy/scp-action@v0.1.7
-        with:
-          host: ${{ env.EC2_HOST }}
-          username: ${{ env.EC2_USER }}
-          key: ${{ secrets.EC2_KEY }}
-          source: |
-            docker-compose.yml
-            frontend/nginx.conf
-          target: ${{ env.APP_DIR }}
-          overwrite: true
-          strip_components: 0
+      - name: Build & Push frontend
+        run: |
+          docker build -t abhi5hek001/app-frontend:latest ./frontend
+          docker push abhi5hek001/app-frontend:latest
 
       - name: Deploy on EC2
-        uses: appleboy/ssh-action@v1.2.0
+        uses: appleboy/ssh-action@v0.1.10
         with:
-          host: ${{ env.EC2_HOST }}
-          username: ${{ env.EC2_USER }}
-          key: ${{ secrets.EC2_KEY }}
+          host: 43.204.28.182
+          username: ubuntu
+          key: ${{ secrets.EC2_SSH_KEY }}
           script: |
-            set -e
-            cd ${{ env.APP_DIR }}
-            # Ensure backend.env exists ON THE SERVER (create once manually)
-            if [ ! -f backend.env ]; then
-              echo "ERROR: backend.env not found in ${{ env.APP_DIR }}. Create it once and re-run."
-              exit 1
-            fi
-            # Pull latest images and recreate
+            cd ~/booklio
+            git pull origin main
             docker compose pull
-            docker compose up -d --remove-orphans
-            docker image prune -f
+            docker compose up -d --build

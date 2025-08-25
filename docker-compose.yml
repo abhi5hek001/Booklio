@@ -6,13 +6,9 @@ services:
       dockerfile: Dockerfile
     image: abhi5hek001/app-backend:latest
     env_file:
-      - ./backend/.env  
+      - ./backend/.env
     environment:
       - NODE_ENV=production
-    ports:
-      # no published port in production (nginx will talk to it internally)
-      # uncomment next line for local testing only:
-      # - "3001:3001"
     networks:
       - appnet
     restart: unless-stopped
@@ -25,7 +21,7 @@ services:
     depends_on:
       - backend
     ports:
-      - "80:80" 
+      - "80:80"
     networks:
       - appnet
     restart: unless-stopped
