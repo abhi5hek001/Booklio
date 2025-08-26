@@ -1,9 +1,6 @@
 name: booklio
 services:
   backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
     image: abhi5hek001/app-backend:latest
     env_file:
       - ./backend/.env
@@ -14,9 +11,6 @@ services:
     restart: unless-stopped
 
   frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
     image: abhi5hek001/app-frontend:latest
     depends_on:
       - backend
