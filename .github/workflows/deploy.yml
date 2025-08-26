@@ -33,9 +33,15 @@ jobs:
         with:
           host: 43.204.28.182
           username: ubuntu
-          key: ${{ secrets.EC2_SSH_KEY }}
+          key: ${{ secrets.EC2_KEY }}
           script: |
             cd ~/booklio
-            git pull origin main
+            echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
             docker compose pull
             docker compose up -d --build
+            echo "==== Running containers ===="
+            docker ps
+            echo "==== Backend logs ===="
+            docker compose logs backend --tail=50
+            echo "==== Frontend logs ===="
+            docker compose logs frontend --tail=50
