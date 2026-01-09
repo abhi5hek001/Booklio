@@ -11,6 +11,7 @@ import {
   Phone,
   ShieldCheck,
   ShieldX,
+  Edit,
   CreditCard,
   Clock,
   ChevronRight,
@@ -100,7 +101,7 @@ const UserHome = () => {
       );
 
       const data = await response.json();
-      // console.log("Cancel order response:", data);
+      console.log("Cancel order response:", data);
 
       if (response.ok && data.success) {
         toast.success("Order cancelled successfully!");

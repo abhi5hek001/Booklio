@@ -112,8 +112,8 @@ User-password;- Password123!
 //=============== Admin
 
 admin-Password:- {
-    "email": "rohanvinkare2022@gmail.com",
-    "password":"Rohan123#XYZ"
+    "email": "abhishek.sy22@iiits.in",
+    "password":"Password123!"
 }
 
 
@@ -134,7 +134,7 @@ admin-Password:- {
 
 
 {
-  "email": "rrvisualcraft@gmail.com",
+  "email": "harry@gmail.com",
   "password": "Password123!"
 }
 

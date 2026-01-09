@@ -1,21 +1,32 @@
+version: '3'
 services:
   backend:
-    image: sujalsa/booklio-backend:latest
-    env_file:
-      - .env
+    image: abhi5hek001/booklio-backend:latest
     ports:
       - "3000:3000"
+    env_file:
+      - .env
     networks:
       - booklio_network
+    depends_on:
+      - redis
 
   frontend:
-    image: sujalsa/booklio-frontend:latest
+    image: abhi5hek001/booklio-frontend:latest
     ports:
-      - "5174:5174"
+      - "5174:80"
     depends_on:
       - backend
     networks:
       - booklio_network
+
+  redis:
+    image: redis
+    container_name: my-redis
+    command: redis-server --maxmemory 100mb --maxmemory-policy allkeys-lru
+    networks:
+      - booklio_network
+    mem_limit: 100m
 
 networks:
   booklio_network:

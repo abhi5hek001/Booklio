@@ -15,7 +15,7 @@ cloudinary.config({
 const uploadCloudMultiple = asyncHandler(async (req, res, next) => {
   try {
     const images = req.files;
-    // console.log(images);
+    console.log(images);
 
     const imageUrls = [];
 
@@ -28,7 +28,7 @@ const uploadCloudMultiple = asyncHandler(async (req, res, next) => {
     }
 
     req.images = imageUrls;
-    // console.log(req.images);
+    console.log(req.images);
 
     next();
   } catch (error) {
@@ -41,7 +41,7 @@ const uploadCloudMultiple = asyncHandler(async (req, res, next) => {
 const uploadCloudSingle = asyncHandler(async (req, res, next) => {
   try {
     const image = req.file;
-    // console.log(image);
+    console.log(image);
 
 
     const result = await cloudinary.uploader.upload(image.path, {
@@ -50,7 +50,7 @@ const uploadCloudSingle = asyncHandler(async (req, res, next) => {
 
     req.image = result.secure_url;
 
-    // console.log(req.image);
+    console.log(req.image);
     next();
   } catch (error) {
     console.log(error);

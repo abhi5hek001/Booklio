@@ -202,7 +202,7 @@ const userRegisterV4 = async (req, res) => {
 
     const { name, email, mobile, password } = req.body;
 
-    // console.log(req.body)
+    console.log(req.body)
 
     // Check if the user already exists by email
     const isExists = await User.findOne({ email: email });

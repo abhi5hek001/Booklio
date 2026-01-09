@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   Card,
@@ -8,23 +8,22 @@ import {
 } from "@/components/ui/card"; // ShadCN card components
 import { Avatar } from "@/components/ui/avatar";
 import { Button } from "../ui/button";
-// import { MdModeEditOutline } from "react-icons/md";
-// import { IoCloseCircle } from "react-icons/io5";
+import { MdModeEditOutline } from "react-icons/md";
+import { IoCloseCircle } from "react-icons/io5";
 import { MdDeleteForever } from "react-icons/md";
 import { FaFacebook, FaInstagram, FaLinkedin, FaBook, FaRupeeSign, FaChartLine, FaUser, FaEnvelope, FaMapMarkerAlt } from "react-icons/fa";
 import {
   Dialog,
   DialogTrigger,
   DialogContent,
-  // DialogHeader,
-  // DialogTitle,
-  // DialogDescription,
-  // DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
 } from "@/components/ui/dialog";
 import toast from "react-hot-toast"; // Import React Hot Toast
 import { useNavigate } from "react-router-dom";
-import { sellersData } from "@/store/adminSlice/sellerData";
-// import { Skeleton } from "@/components/ui/skeleton";
+import { Skeleton } from "@/components/ui/skeleton";
 
 // Helper function to generate random color
 const getRandomColor = () => {
@@ -220,6 +219,7 @@ const SellersList = () => {
           role,
           sellerId,
           mobile,
+          image,
           address,
           socialMediaLinks,
           storeName,

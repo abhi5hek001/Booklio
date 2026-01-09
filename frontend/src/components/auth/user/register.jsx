@@ -17,7 +17,7 @@ function AuthRegisters() {
 
   const onSubmit = async (data) => {
     try {
-      // console.log("Data being sent to backend:", data);
+      console.log("Data being sent to backend:", data);
 
       const response = await fetch(`${import.meta.env.VITE_BASE_URL}/user/api/v4/register`, {
         method: "POST",
@@ -27,7 +27,7 @@ function AuthRegisters() {
         body: JSON.stringify(data), // Ensure the payload matches backend expectations
       });
 
-      // console.log("Response from server:", response);
+      console.log("Response from server:", response);
 
       if (!response.ok) {
         // Attempt to parse error details from the server
@@ -36,8 +36,8 @@ function AuthRegisters() {
         throw new Error(errorData.message || "Registration failed.");
       }
 
-      // const result = await response.json();
-      // console.log("Registration successful:", result);
+      const result = await response.json();
+      console.log("Registration successful:", result);
 
       // Show success toast and redirect
       toast.success("Mail sent successfully. Verify your account through the mail.", {

@@ -78,7 +78,7 @@ const SellerLogin = () => {
       }
 
       const result = await response.json();
-      // console.log("Response from API:", result);
+      console.log("Response from API:", result);
 
       // Check for the accessToken in the response
       if (result.accessToken) {
@@ -154,7 +154,7 @@ const SellerLogin = () => {
           </CardContent>
           <CardFooter className="text-center text-sm text-gray-600">
             <p>
-              Don&apos;t have an account?{" "}
+              Don't have an account?{" "}
               <Link to="/auth/seller/register" className="font-medium text-blue-600 hover:underline">
                 Register here
               </Link>

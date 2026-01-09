@@ -65,7 +65,7 @@ function SellerRegister() {
 
   const onSubmit = async (data) => {
     try {
-      // console.log("Seller Registration Data:", data);
+      console.log("Seller Registration Data:", data);
 
       const response = await fetch(`${import.meta.env.VITE_BASE_URL}/seller/api/v4/register`, {
         method: "POST",
@@ -100,8 +100,8 @@ function SellerRegister() {
         return;
       }
 
-      // const result = await response.json();
-      // console.log("Registration Response:", result);
+      const result = await response.json();
+      console.log("Registration Response:", result);
 
       // Show success toast for 3 seconds
       toast.success("Registration successful! \nPlease verify your email to activate your account.", {

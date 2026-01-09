@@ -59,7 +59,7 @@ const checkToken = async (req, res) => {
 
         // Decode and verify the token
         const secretKey = process.env.ACCESS_TOKEN_SECRET || "your_secret_key";
-        // console.log("Using Secret Key:", secretKey);
+        console.log("Using Secret Key:", secretKey);
 
         const decodedData = jwt.verify(accessToken, secretKey);
 
@@ -69,7 +69,7 @@ const checkToken = async (req, res) => {
             data: decodedData,
         });
     } catch (error) {
-        // console.error("JWT Verification Error:", error.message);
+        console.error("JWT Verification Error:", error.message);
         return res.status(400).json({
             success: false,
             msg: error.message || "An error occurred in checkToken.",

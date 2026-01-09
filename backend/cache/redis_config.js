@@ -6,7 +6,10 @@ let redisConnected = false;
 // Initialize Redis connection
 async function connectRedis() {
     redisClient = createClient({
-        url: process.env.REDIS_URL
+        socket: {
+            host: process.env.REDIS_HOST || 'redis',
+            port: process.env.REDIS_PORT || 6379
+        }
     });
 
     redisClient.on('error', (err) => {
@@ -14,7 +17,7 @@ async function connectRedis() {
         redisConnected = false;
     });
 
-    redisClient.on('connect', async () => {
+    redisClient.on('connect', () => {   
         console.log('Redis connected');
         redisConnected = true;
     });

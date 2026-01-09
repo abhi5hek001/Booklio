@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { booksData } from "@/store/adminSlice/booksData";
 import { sellersData } from "@/store/adminSlice/sellerData";
@@ -24,19 +24,19 @@ import {
   Users, 
   BookOpen, 
   Store, 
-  // TrendingUp, 
-  // TrendingDown, 
+  TrendingUp, 
+  TrendingDown, 
   ArrowUpRight, 
   ArrowDownRight, 
   Award, 
   DollarSign,
-  // Calendar,
-  // BarChart3,
-  // PieChart,
-  // Users2,
-  // BookMarked,
-  // ShoppingCart,
-  // Star
+  Calendar,
+  BarChart3,
+  PieChart,
+  Users2,
+  BookMarked,
+  ShoppingCart,
+  Star
 } from "lucide-react";
 
 // Register Chart.js components

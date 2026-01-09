@@ -6,6 +6,7 @@ const { connectRedis } = require('./cache/redis_config.js');
 
 const app = express();
 
+
 // Only connect DB and Redis if not in test mode
 if (process.env.NODE_ENV !== 'test') {
     connectDB();
@@ -21,10 +22,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 const cors = require("cors");
-app.use(cors({
-  origin: 'http://3.108.254.28:5174',
-  credentials: true
-}));
+app.use(cors());
 
 const { logger, requestLogger } = require("./middleware/logger");
 app.use(requestLogger);

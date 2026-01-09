@@ -46,7 +46,7 @@ const SellerHome = () => {
 
   const sellerBooks = useSelector(state => state.seller.sellerBookData);
   const books = sellerBooks?.books || []; // Ensure books is always an array
-  // console.log("Books:", books);
+  console.log("Books:", books);
   const genreCounts = books.reduce((acc, book) => {
     book.genre.forEach((genre) => {
       acc[genre] = (acc[genre] || 0) + 1;
@@ -60,9 +60,9 @@ const SellerHome = () => {
   // Get orders from Redux
   const { sellerOrders, loading, error, mostOrderedBook } = useSelector((state) => state.seller);
   // Add these debug logs
-  // console.log("Sample Order Data:", sellerOrders?.[0]);
-  // console.log("Sample Book Info:", sellerOrders?.[0]?.book);
-  // console.log("Seller Orders:", sellerOrders);
+  console.log("Sample Order Data:", sellerOrders?.[0]);
+  console.log("Sample Book Info:", sellerOrders?.[0]?.book);
+  console.log("Seller Orders:", sellerOrders);
   console.log("Most Ordered Book:", mostOrderedBook);
   console.log("Loading:", loading);
   console.log("Error:", error);
@@ -71,7 +71,7 @@ const SellerHome = () => {
     if (sellerId) {
       dispatch(fetchSellerBooks(sellerId));
       dispatch(fetchSellerOrders(sellerId));
-      // console.log("Fetching data for seller:", sellerId);
+      console.log("Fetching data for seller:", sellerId);
     }
   }, [sellerId, dispatch]); // Remove sellerOrders from dependencies
 

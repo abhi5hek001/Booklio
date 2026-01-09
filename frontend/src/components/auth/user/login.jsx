@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardHeader, CardFooter, CardContent } from "@/components/ui/card";
-import { useDispatch,} from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addData } from "@/store/authSlice/user";
 import { useEffect } from "react";
 import { toast } from "react-hot-toast";
@@ -13,7 +13,7 @@ const AuthLogin = () => {
   const { register, handleSubmit, formState: { errors } } = useForm();
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  // const reduxData = useSelector((state) => state.auth.userDetails);
+  const reduxData = useSelector((state) => state.auth.userDetails);
 
   // Function to check token validity
   const checkTokenValidity = async (token) => {
@@ -26,10 +26,10 @@ const AuthLogin = () => {
       });
 
       const result = await response.json();
-      // console.log("Token check response:", result);
+      console.log("Token check response:", result);
 
       if (result.success && result.data.credDecode.role === "user") {
-        // console.log(result)
+        console.log(result)
         // localStorage.setItem("role", result.data.credDecode.role);
         toast.success("Redirecting...");
         // Store user data in Redux
@@ -57,7 +57,7 @@ const AuthLogin = () => {
   // Login submission logic
   const onSubmit = async (data) => {
     try {
-      // console.log("Submitting Login Data:", data);
+      console.log("Submitting Login Data:", data);
 
       const response = await fetch(`${import.meta.env.VITE_BASE_URL}/user/api/v1/login`, {
         method: "POST",
@@ -76,7 +76,7 @@ const AuthLogin = () => {
       }
 
       const result = await response.json();
-      // console.log("Response from API:", result);
+      console.log("Response from API:", result);
 
       // Check for the accessToken in the response
       if (result.accessToken) {
@@ -155,7 +155,7 @@ const AuthLogin = () => {
           </CardContent>
           <CardFooter className="text-center text-sm text-gray-600">
             <p>
-              Don&apos;t have an account?{" "}
+              Don't have an account?{" "}
               <Link to="/auth/register" className="font-medium text-blue-600 hover:underline">
                 Register here
               </Link>

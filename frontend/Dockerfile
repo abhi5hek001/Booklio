@@ -6,29 +6,25 @@ WORKDIR /app
 ENV NODE_OPTIONS="--max-old-space-size=4096"
 
 COPY package*.json ./
-RUN npm install
 
-# Accept build arg for Vite env var
-ARG VITE_BASE_URL
-ENV VITE_BASE_URL=$VITE_BASE_URL
+RUN npm install
 
 COPY . .
 
 RUN npm run build
 
-# Step 2: Serve with lightweight Node.js static server
-FROM node:20-slim
+# Step 2: Serve using nginx
+FROM nginx:alpine
 
-WORKDIR /app
+# Remove default nginx html
+RUN rm -rf /usr/share/nginx/html/*
 
-# Install serve globally
-RUN npm install -g serve
+# Copy built files
+COPY --from=build /app/dist /usr/share/nginx/html
 
-# Copy built frontend
-COPY --from=build /app/dist ./dist
+# 🔥 Copy custom nginx config 🔥
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# Expose production port (match dev port for consistency)
-EXPOSE 5174
+EXPOSE 80
 
-# Run static server
-CMD ["serve", "-s", "dist", "-l", "5174"]
+CMD ["nginx", "-g", "daemon off;"]
