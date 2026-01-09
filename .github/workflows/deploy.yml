@@ -1,4 +1,4 @@
-name: CI/CD Deploy to EC2
+name: CI/CD Deploy Backend to EC2
 
 on:
   push:
@@ -21,6 +21,7 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
+      # 1. Build and Push Backend Image
       - name: Build and Push Backend Image
         uses: docker/build-push-action@v5
         with:
@@ -29,26 +30,35 @@ jobs:
           push: true
           tags: abhi5hek001/booklio-backend:latest
 
-      - name: Build and Push Frontend Image
-        uses: docker/build-push-action@v5
-        with:
-          context: ./frontend
-          file: ./frontend/Dockerfile
-          push: true
-          tags: abhi5hek001/booklio-frontend:latest
-          build-args: |
-            VITE_BASE_URL=http://43.204.98.244:3000
-
       - name: Set up SSH for EC2
         uses: webfactory/ssh-agent@v0.8.0
         with:
           ssh-private-key: ${{ secrets.EC2_SSH_KEY }}
 
+      # 2. Execute Deployment Script on EC2
       - name: Deploy on EC2
         run: |
-          ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << EOF
-            cd ~/Booklio
-            docker-compose pull
-            docker-compose up -d
-            docker image prune -f
+          ssh -o StrictHostKeyChecking=no ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
+            # Login to Docker on the server
+            echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
+
+            # Force remove existing containers if they exist
+            docker rm -f dev dev-redis 2>/dev/null || true
+            
+            # Remove the old image to ensure a fresh pull
+            docker rmi abhi5hek001/booklio-backend:latest 2>/dev/null || true
+
+            # Start Redis container
+            docker run -d --name dev-redis -p 6379:6379 redis:alpine
+
+            # Pull the fresh backend image
+            docker pull abhi5hek001/booklio-backend:latest
+
+            # Start the backend container
+            docker run -d \
+              --name dev \
+              --env-file /home/${{ secrets.EC2_USER }}/dev/.env \
+              --link dev-redis:redis \
+              -p 3000:3000 \
+              abhi5hek001/booklio-backend:latest
           EOF
