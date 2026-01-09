@@ -1,0 +1,22 @@
+services:
+  backend:
+    image: sujalsa/booklio-backend:latest
+    env_file:
+      - .env
+    ports:
+      - "3000:3000"
+    networks:
+      - booklio_network
+
+  frontend:
+    image: sujalsa/booklio-frontend:latest
+    ports:
+      - "5174:5174"
+    depends_on:
+      - backend
+    networks:
+      - booklio_network
+
+networks:
+  booklio_network:
+    driver: bridge
