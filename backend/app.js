@@ -89,7 +89,7 @@ app.get("/", (req, res) => {
           <div>
             <h1>Welcome to Booklio</h1>
             <p>Your go-to platform for book lovers</p>
-            <a href="https://booklio.onrender.com/api-docs/">View API Documentation</a>
+            <a href="http://43.204.98.244:3000/api-docs/">View API Documentation</a>
           </div>
         </body>
       </html>
