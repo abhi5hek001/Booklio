@@ -1,5 +1,5 @@
 # Use an official Node.js image if your backend is Node.js (adjust if it's different)
-FROM node:20
+FROM node:20-alpine
 
 # Set working directory
 WORKDIR /app
