@@ -38,6 +38,7 @@ function ShoppingHeader() {
           <div className="flex items-center gap-2 sm:gap-4">
             <div>
               <a
+                href=""
                 className="text-xs sm:text-sm px-3 sm:px-4 py-1.5 sm:py-2 rounded cursor-pointer bg-blue-600 hover:bg-blue-700 transition-colors"
                 onClick={() => navigate("/user")}
               >
@@ -47,6 +48,7 @@ function ShoppingHeader() {
             <div>
               {isLoggedIn ? (
                 <a
+                  href=""
                   className="text-xs sm:text-sm px-3 sm:px-4 py-1.5 sm:py-2 rounded cursor-pointer bg-red-600 hover:bg-red-700 transition-colors"
                   onClick={handleLogout}
                 >
@@ -54,6 +56,7 @@ function ShoppingHeader() {
                 </a>
               ) : (
                 <a
+                  href=""
                   className="text-xs sm:text-sm px-3 sm:px-4 py-1.5 sm:py-2 rounded cursor-pointer bg-blue-600 hover:bg-blue-700 transition-colors"
                   onClick={() => navigate("/auth/login")}
                 >

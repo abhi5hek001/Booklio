@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# Sitemap location (Update this once you generate one)
+Sitemap: https://booklio.sahayabhishek.tech/sitemap.xml

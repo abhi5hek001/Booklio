@@ -6,8 +6,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardHeader, CardFooter, CardContent } from "@/components/ui/card";
 import { toast } from "react-hot-toast";
+import { Eye, EyeOff } from "lucide-react";
 
 function SellerRegister() {
+  const [showPassword, setShowPassword] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const navigate = useNavigate();
 
@@ -202,13 +204,22 @@ function SellerRegister() {
             },
           }}
           render={({ field }) => (
-            <Input
-              {...field}
-              id="password"
-              type="password"
-              placeholder="Enter your password"
-              className="mt-2 text-white"
-            />
+            <div className="relative"> {/* Added relative container */}
+              <Input
+                {...field}
+                id="password"
+                type={showPassword ? "text" : "password"} // Dynamic type toggle
+                placeholder="Enter your password"
+                className="mt-2 text-white pr-10" // Added padding-right for icon
+              />
+              <button
+                type="button" // Critical: prevents page navigation/submission
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 mt-1 text-gray-500 hover:text-gray-300 focus:outline-none"
+              >
+                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+              </button>
+            </div>
           )}
         />
         {errors.password && <p className="text-sm text-red-500">{errors.password.message}</p>}

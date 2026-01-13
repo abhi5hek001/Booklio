@@ -69,6 +69,7 @@ const Navbar = ({ userData }) => {
               </li>
               <li>
                 <a
+                  href=""
                   onClick={handleLogout}
                   className="flex items-center gap-1 sm:gap-2 text-xs sm:text-sm px-3 sm:px-4 py-1.5 sm:py-2 rounded cursor-pointer bg-red-600 hover:bg-red-700 transition-colors"
                 >

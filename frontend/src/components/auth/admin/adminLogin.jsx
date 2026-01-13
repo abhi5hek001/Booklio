@@ -8,8 +8,10 @@ import { useDispatch } from "react-redux";
 import { addAdminData } from "@/store/authSlice/admin"; // Import addAdminData
 import { useEffect } from "react";
 import { toast } from "react-hot-toast";
+import { Eye, EyeOff } from "lucide-react";
 
 const AdminLogin = () => {
+  const [showPassword, setShowPassword] = useState(false);
   const { register, handleSubmit, formState: { errors } } = useForm();
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -127,19 +129,28 @@ const AdminLogin = () => {
                 <Label htmlFor="password" className="text-gray-600">
                   Password
                 </Label>
-                <Input
-                  type="password"
-                  id="password"
-                  {...register("password", {
-                    required: "Password is required",
-                    minLength: {
-                      value: 6,
-                      message: "Password must be at least 6 characters long",
-                    },
-                  })}
-                  placeholder="Enter your password"
-                  className="mt-2 text-white"
-                />
+                 <div className="relative">
+                  <Input
+                    type={showPassword ? "text" : "password"} // Toggles input mask
+                    id="password"
+                    {...register("password", {
+                      required: "Password is required",
+                      minLength: {
+                        value: 6,
+                        message: "Password must be at least 6 characters long",
+                      },
+                    })}
+                    placeholder="Enter your password"
+                    className="mt-2 text-white pr-10" // Padding ensures text doesn't hit icon
+                  />
+                  <button
+                    type="button" // Prevents form from submitting on click
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 mt-1 text-gray-500 hover:text-gray-300 focus:outline-none"
+                  >
+                    {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                  </button>
+                </div>
                 {errors.password && (
                   <p className="text-sm text-red-500 mt-1">{errors.password.message}</p>
                 )}
