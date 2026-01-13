@@ -16,19 +16,26 @@ if (process.env.NODE_ENV !== 'test') {
 app.set("view engine", "ejs");
 app.set("views", "./views");
 
-const bodyParser = require("body-parser");
 app.use(express.json());
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
 
 const cors = require("cors");
-app.use(cors());
+app.use(cors({
+  origin: [
+    'https://booklio.sahayabhishek.tech'
+  ],
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+  credentials: true
+}));
 
 const { logger, requestLogger } = require("./middleware/logger");
 app.use(requestLogger);
 
 const helmet = require("helmet");
-app.use(helmet());
+app.use(helmet({
+  contentSecurityPolicy: false, 
+  crossOriginEmbedderPolicy: false
+}));
+
 
 const setupSwagger = require("./config/swaggerConfig.js");
 
@@ -89,7 +96,7 @@ app.get("/", (req, res) => {
           <div>
             <h1>Welcome to Booklio</h1>
             <p>Your go-to platform for book lovers</p>
-            <a href="http://43.204.98.244:3000/api-docs/">View API Documentation</a>
+            <a href="https://booklio-backend.sahayabhishek.tech/api-docs">View API Documentation</a>
           </div>
         </body>
       </html>

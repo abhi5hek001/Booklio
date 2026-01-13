@@ -24,8 +24,8 @@ jobs:
       - name: Create .env file for Build
         working-directory: ./frontend
         run: |
-          echo "VITE_BASE_URL=http://43.204.98.244" >> .env
-          echo "GEOCODE_API=b6b5a9c356a54d6aaeb80b98fa63aa75" >> .env
+          echo "VITE_BASE_URL=${{ secrets.VITE_BASE_URL }}" >> .env
+          echo "GEOCODE_API=${{ secrets.GEOCODE_API }}" >> .env
 
       - name: Install Dependencies
         working-directory: ./frontend

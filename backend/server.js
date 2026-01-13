@@ -140,7 +140,7 @@
 
 
 require("dotenv").config();
-const app = require('./app'); // 🔸 Import pre-configured app
+const app = require('./app'); // Import pre-configured app
 
 // ✅ Just start the server (safe for production & local use)
 app.listen(process.env.PORT || 3000, "0.0.0.0", () => {
