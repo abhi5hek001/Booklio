@@ -5,7 +5,7 @@ const teamMembers = [
     {
         name: "Abhishek Sahay",
         role: "Full Stack Developer",
-        image: "", // Add your image path
+        image: "",
         bio: "Passionate about creating seamless web experiences and solving complex problems through elegant code.",
         github: "https://github.com/abhi5hek001",
         linkedin: "https://www.linkedin.com/in/abhi5hek001/",
