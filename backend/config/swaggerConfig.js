@@ -7,21 +7,17 @@ const options = {
         info: {
             title: "Booklio API",
             version: "1.0.0",
-            description: "API documentation for the Booklio book website",
+            description: "API documentation of Booklio website",
         },
         servers: [
             {
                 url: "http://localhost:3000",
-                description: "Base URL of the application",
+                description: "Localhost Base URL of the application",
             },
             {
-                url: "https://booklio.onrender.com",
-                description: "Render server (IP address)",
-            },
-            {
-                url: "http://13.203.251.217:3000",
-                description: "Production server (IP address)",
-            },
+                url: "https://booklio-backend.sahayabhishek.tech",
+                description: "AWS Backend URL of the application",
+            }
         ],
         components: {
             securitySchemes: {
