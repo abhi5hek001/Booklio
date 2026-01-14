@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardHeader, CardFooter, CardContent } from "@/components/ui/card";
 import { toast } from "react-hot-toast";
 import { Eye, EyeOff } from "lucide-react";
+import { useState } from "react";
 
 function AuthRegisters() {
   const [showPassword, setShowPassword] = useState(false);

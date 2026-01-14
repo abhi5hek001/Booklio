@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardHeader, CardFooter, CardContent } from "@/components/ui/card";
 import { useDispatch } from "react-redux";
 import { addAdminData } from "@/store/authSlice/admin"; // Import addAdminData
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import { Eye, EyeOff } from "lucide-react";
 
