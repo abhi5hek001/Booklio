@@ -1,5 +1,6 @@
-import { ChevronDown, ChevronUp } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion"; 
 
 export const Faqs = () => {
     const faqs = [
@@ -24,47 +25,65 @@ export const Faqs = () => {
     };
 
     return (
-        <div className="min-h-[1/2] bg-backgroundContrast py-10">
-            <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="bg-transparent py-12 w-full">
+            <div className="max-w-4xl mx-auto px-4 sm:px-6">
+                
+                {/* --- SIMPLIFIED HEADER --- */}
                 <div className="text-center mb-12">
-                    <h2 className="text-4xl font-bold text-blue-400 mb-4">Frequently Asked Questions</h2>
-                    <p className="text-gray-400">Everything you need to know about Booklio</p>
+                    <motion.h2 
+                        initial={{ opacity: 0 }}
+                        whileInView={{ opacity: 1 }}
+                        className="text-3xl md:text-4xl font-bold text-white mb-4 tracking-tight"
+                    >
+                        Frequently Asked <span className="text-blue-500">Questions</span>
+                    </motion.h2>
+                    <p className="text-slate-400 text-sm md:text-base">
+                        Everything you need to know about Booklio
+                    </p>
                 </div>
 
+                {/* --- ACCORDION SECTION --- */}
                 <div className="space-y-4">
                     {faqs.map((faq, index) => (
                         <div
                             key={index}
-                            onClick={() => handleClick(index)}
-                            className="bg-gray-600/50 backdrop-blur-sm rounded-lg overflow-hidden hover:bg-gray-700/70 transition-all duration-300"
+                            className={`border border-white/10 rounded-xl transition-all duration-300 ${
+                                clickedIndex === index 
+                                ? "bg-white/5 border-blue-500/30" 
+                                : "hover:bg-white/5"
+                            }`}
                         >
                             <button
-                                className="w-full px-6 py-4 text-left flex items-center justify-between"
-                                aria-expanded={clickedIndex === index}
+                                onClick={() => handleClick(index)}
+                                className="w-full px-5 py-5 md:px-8 md:py-6 text-left flex items-center justify-between gap-4"
                             >
-                                <span className="text-lg font-medium text-white">{faq.question}</span>
-                                <span className="ml-6 flex-shrink-0 text-white">
-                                    {clickedIndex === index ? (
-                                        <ChevronUp className="h-6 w-6" />
-                                    ) : (
-                                        <ChevronDown className="h-6 w-6" />
-                                    )}
+                                <span className="text-base md:text-lg font-medium text-slate-100 leading-snug">
+                                    {faq.question}
                                 </span>
+                                <div className={`flex-shrink-0 transition-transform duration-300 ${clickedIndex === index ? "rotate-180" : ""}`}>
+                                    <ChevronDown className={`h-5 w-5 ${clickedIndex === index ? "text-blue-500" : "text-slate-400"}`} />
+                                </div>
                             </button>
 
-                            <div
-                                className={`transition-all duration-300 ease-in-out ${
-                                    clickedIndex === index 
-                                        ? 'max-h-48 opacity-100' 
-                                        : 'max-h-0 opacity-0'
-                                }`}
-                            >
-                                <div className="px-6 pb-4">
-                                    <p className="text-blue-300 text-base leading-relaxed">
-                                        {faq.answer}
-                                    </p>
-                                </div>
-                            </div>
+                            <AnimatePresence initial={false}>
+                                {clickedIndex === index && (
+                                    <motion.div
+                                        initial={{ height: 0, opacity: 0 }}
+                                        animate={{ height: "auto", opacity: 1 }}
+                                        exit={{ height: 0, opacity: 0 }}
+                                        transition={{ duration: 0.3, ease: "easeInOut" }}
+                                    >
+                                        {/* px-5 on mobile, px-8 on desktop to match button and prevent clipping */}
+                                        <div className="px-5 md:px-8 pb-6">
+                                            <div className="pt-2 border-t border-white/5">
+                                                <p className="text-slate-400 text-sm md:text-base leading-relaxed">
+                                                    {faq.answer}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
                         </div>
                     ))}
                 </div>

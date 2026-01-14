@@ -1,535 +1,218 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardContent,
-  CardFooter,
-} from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { FaFacebookF, FaInstagram, FaLinkedin, FaStar, FaBookOpen } from "react-icons/fa";
+import { FaShoppingCart, FaStore, FaStar, FaChevronLeft } from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Badge } from "@/components/ui/badge";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Separator } from "@/components/ui/separator";
 
 const BookDetails = () => {
-  const { isbn, sellerId } = useParams(); // Extract isbn and sellerId from params
-  const isbnId = isbn;
-  const sellerUniqueId = sellerId;
+  const { isbn, sellerId } = useParams();
+  const navigate = useNavigate();
+  
   const [book, setBook] = useState(null);
   const [sellers, setSellers] = useState([]);
   const [sellerInfo, setSellerInfo] = useState(null);
   const [suggestedBooks, setSuggestedBooks] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  const navigate = useNavigate();
-
-  const handlePlaceOrderClick = () => {
-    navigate("/placeOrder", {
-      state: { sellerUniqueId, isbnId },
-    });
-  };
-
-  const handleBookClick = (sellerId, isbn) => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    navigate(`/seller/${sellerId}/isbn/${isbn}`);
-  };
-
-  const handleViewAllBooks = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    navigate('/shop/listing');
-  };
-
+  // --- 1. Fetch Book & Sellers (Listen to ISBN change) ---
   useEffect(() => {
-    // Fetch book details
+    // Scroll to top on every route change
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    
+    setBook(null); // Reset current book to show loader
     fetch(`${import.meta.env.VITE_BASE_URL}/book/api/v1/sellers-by-book/${isbn}`)
-      .then((response) => response.json())
+      .then((res) => res.json())
       .then((data) => {
         if (data.success) {
           setBook(data.book);
           setSellers(data.sellers);
-        } else {
-          console.error("Failed to fetch data:", data.msg);
         }
-      })
-      .catch((error) => console.error("Error fetching data:", error));
-  }, [isbn]);
+      });
+  }, [isbn]); // DEPENDENCY: Rerun when ISBN in URL changes
 
+  // --- 2. Fetch Seller Info (Listen to sellerId change) ---
   useEffect(() => {
     if (sellerId) {
-      // Fetch seller details using sellerId
       fetch(`${import.meta.env.VITE_BASE_URL}/book/api/v1/${sellerId}`)
-        .then((response) => response.json())
+        .then((res) => res.json())
         .then((data) => {
-          if (data.success) {
-            setSellerInfo(data.seller);
-          } else {
-            console.error("Failed to fetch seller info:", data.msg);
-          }
-        })
-        .catch((error) => console.error("Error fetching seller data:", error));
+          if (data.success) setSellerInfo(data.seller);
+        });
     }
-  }, [sellerId]);
+  }, [sellerId]); // DEPENDENCY: Rerun when sellerId in URL changes
 
+  // --- 3. Fetch Recommendations (Listen to ISBN change) ---
   useEffect(() => {
-    // Fetch suggested books
     setIsLoading(true);
     fetch(`${import.meta.env.VITE_BASE_URL}/book/api/v1/all-genre-book`)
-      .then((response) => response.json())
+      .then((res) => res.json())
       .then((data) => {
         if (data.success) {
-          // Flatten all books and shuffle them
           const allBooks = Object.values(data.bookData).flat();
-          // Filter out the current book
-          const filteredBooks = allBooks.filter(b => b.isbn !== isbn);
-          const shuffledBooks = filteredBooks.sort(() => 0.5 - Math.random());
-          // Take first 4 books
-          setSuggestedBooks(shuffledBooks.slice(0, 4));
+          const filtered = allBooks.filter(b => b.isbn !== isbn);
+          setSuggestedBooks(filtered.sort(() => 0.5 - Math.random()).slice(0, 4));
         }
       })
-      .catch((error) => console.error("Error fetching suggested books:", error))
       .finally(() => setIsLoading(false));
-  }, [isbn]);
+  }, [isbn]); // DEPENDENCY: Update suggestions when ISBN changes
 
-  if (!book) {
-    return (
-      <div className="flex justify-center items-center min-h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
-      </div>
-    );
-  }
+  const handlePlaceOrderClick = () => {
+    navigate("/placeOrder", { state: { sellerUniqueId: sellerId, isbnId: isbn } });
+  };
+
+  const handleBookClick = (sId, bIsbn) => {
+    // This now works because the useEffects are watching the URL params
+    navigate(`/seller/${sId}/isbn/${bIsbn}`);
+  };
+
+  if (!book) return (
+    <div className="flex justify-center items-center min-h-screen bg-[#070708]">
+      <div className="w-12 h-12 border-4 border-blue-600/20 border-t-blue-500 rounded-full animate-spin" />
+    </div>
+  );
 
   return (
-    <motion.div 
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.8 }}
-      className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-blue-900 py-12 px-4 sm:px-6 lg:px-8"
-    >
-      <div className="max-w-7xl mx-auto">
-        <motion.div
-          initial={{ y: -20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.2 }}
-          className="text-center mb-16"
+    <div className="min-h-screen bg-[#070708] text-zinc-100 pt-32 pb-20 px-4 sm:px-6 lg:px-8 font-sans">
+      <div className="fixed inset-0 pointer-events-none">
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-600/10 blur-[150px] rounded-full" />
+        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-purple-600/10 blur-[150px] rounded-full" />
+      </div>
+
+      <div className="max-w-7xl mx-auto relative z-10">
+        <button 
+          onClick={() => navigate(-1)}
+          className="flex items-center gap-2 text-zinc-500 hover:text-blue-500 transition-colors mb-10 group"
         >
-          <div className="w-24 h-1 bg-gradient-to-r from-blue-500 to-purple-500 mx-auto rounded-full"></div>
-        </motion.div>
+          <FaChevronLeft className="group-hover:-translate-x-1 transition-transform" />
+          <span className="text-[10px] font-black uppercase tracking-[0.2em]">Go Back</span>
+        </button>
 
-        {/* Book Details Section */}
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.4 }}
-          className="mb-16"
-        >
-          <div className="relative">
-            {/* Background Blur Effect */}
-            <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-2xl blur-3xl"></div>
-            
-            <Card className="relative bg-gray-800/30 backdrop-blur-md border border-gray-700/50 shadow-2xl">
-              <div className="flex flex-col lg:flex-row gap-8 p-8">
-                {/* Book Cover with 3D Effect */}
-                <motion.div 
-                  className="lg:w-1/3 flex flex-col items-center gap-4"
-                  whileHover={{ scale: 1.02 }}
-                  transition={{ type: "spring", stiffness: 300 }}
-                >
-                  <div className="relative">
-                    <img
-                      src={book.volumeInfo.imageLinks?.thumbnail}
-                      alt={book.volumeInfo.title}
-                      className="relative w-64 h-auto object-cover rounded-lg shadow-2xl transform hover:rotate-1 transition-transform duration-300"
-                    />
-                  </div>
-                  
-                  {sellerInfo && (
-                    <Dialog>
-                      <DialogTrigger asChild>
-                        <Button className="w-[1/3] bg-gradient-to-r from-blue-500/80 to-purple-500/80 hover:from-blue-600/80 hover:to-purple-600/80 text-white backdrop-blur-sm">
-                          View Seller Details
-                        </Button>
-                      </DialogTrigger>
-                      <DialogContent className="bg-gray-800/50 backdrop-blur-md border border-gray-700/50 max-w-2xl">
-                        <DialogHeader>
-                          <DialogTitle className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">
-                            {sellerInfo.storeName}
-                          </DialogTitle>
-                        </DialogHeader>
-                        <div className="space-y-6">
-                          <div className="flex justify-center">
-                            <div className="relative">
-                              <div className="absolute -inset-1 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full blur opacity-30"></div>
-                              <img
-                                src={sellerInfo.image}
-                                alt={sellerInfo.storeName}
-                                className="relative w-32 h-32 object-cover rounded-full border-4 border-blue-500"
-                              />
-                            </div>
-                          </div>
-
-                          <div className="space-y-4">
-                            <div className="bg-gray-700/30 backdrop-blur-sm p-4 rounded-lg border border-gray-700/50">
-                              <p className="text-gray-300">
-                                <span className="font-semibold text-blue-400">Seller Name:</span> {sellerInfo.name}
-                              </p>
-                              <p className="text-gray-300 mt-2">
-                                <span className="font-semibold text-blue-400">Store Description:</span> {sellerInfo.storeDescription}
-                              </p>
-                            </div>
-                            
-                            <div className="bg-gray-700/30 backdrop-blur-sm p-4 rounded-lg border border-gray-700/50">
-                              <p className="text-gray-300">
-                                <span className="font-semibold text-blue-400">Location:</span>{" "}
-                                {`${sellerInfo.address.street}, ${sellerInfo.address.city}, ${sellerInfo.address.state}, ${sellerInfo.address.zipCode}`}
-                              </p>
-                            </div>
-
-                            <div className="bg-gray-700/30 backdrop-blur-sm p-4 rounded-lg border border-gray-700/50">
-                              <p className="text-gray-300">
-                                <span className="font-semibold text-blue-400">Email:</span> {sellerInfo.email}
-                              </p>
-                              <p className="text-gray-300 mt-2">
-                                <span className="font-semibold text-blue-400">UPI ID:</span> {sellerInfo.upiId}
-                              </p>
-                            </div>
-
-                            <div className="flex justify-center space-x-6">
-                              <motion.a
-                                whileHover={{ scale: 1.2, rotate: 10 }}
-                                href={sellerInfo.socialMediaLinks.facebook}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-blue-500 hover:text-blue-400 transition-colors duration-300"
-                              >
-                                <FaFacebookF size={24} />
-                              </motion.a>
-                              <motion.a
-                                whileHover={{ scale: 1.2, rotate: -10 }}
-                                href={sellerInfo.socialMediaLinks.instagram}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-pink-500 hover:text-pink-400 transition-colors duration-300"
-                              >
-                                <FaInstagram size={24} />
-                              </motion.a>
-                              <motion.a
-                                whileHover={{ scale: 1.2, rotate: 10 }}
-                                href={sellerInfo.socialMediaLinks.linkedin}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="text-blue-400 hover:text-blue-300 transition-colors duration-300"
-                              >
-                                <FaLinkedin size={24} />
-                              </motion.a>
-                            </div>
-
-                            <Button
-                              onClick={() => alert(`Contacting ${sellerInfo.name}`)}
-                              className="w-full bg-gradient-to-r from-blue-500/80 to-purple-500/80 hover:from-blue-600/80 hover:to-purple-600/80 text-white py-3 rounded-lg transition-all duration-300 transform hover:scale-105 backdrop-blur-sm"
-                            >
-                              Contact Seller
-                            </Button>
-                          </div>
-                        </div>
-                      </DialogContent>
-                    </Dialog>
-                  )}
-                </motion.div>
-                
-                {/* Book Info */}
-                <div className="lg:w-2/3 space-y-6">
-                  <motion.div
-                    initial={{ x: -20, opacity: 0 }}
-                    animate={{ x: 0, opacity: 1 }}
-                    transition={{ delay: 0.6 }}
-                  >
-                    <h2 className="text-4xl font-bold text-white mb-2">{book.volumeInfo.title}</h2>
-                    <div className="flex items-center space-x-2 mb-4">
-                      <FaStar className="text-yellow-400" />
-                      <span className="text-gray-300">4.8 (120 reviews)</span>
-                    </div>
-
-                    <Tabs defaultValue="details" className="w-full">
-                      <TabsList className="grid w-full grid-cols-2 bg-gray-700/50 backdrop-blur-sm">
-                        <TabsTrigger value="details" className="data-[state=active]:bg-blue-500/50 data-[state=active]:backdrop-blur-sm">
-                          Details
-                        </TabsTrigger>
-                        <TabsTrigger value="description" className="data-[state=active]:bg-blue-500/50 data-[state=active]:backdrop-blur-sm">
-                          Description
-                        </TabsTrigger>
-                      </TabsList>
-
-                      <TabsContent value="details" className="mt-4">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-gray-300">
-                          <div className="bg-gray-700/30 backdrop-blur-sm p-4 rounded-lg border border-gray-700/50">
-                            <p className="font-semibold text-blue-400">Author(s)</p>
-                            <p>{book.volumeInfo.authors?.join(", ")}</p>
-                          </div>
-                          <div className="bg-gray-700/30 backdrop-blur-sm p-4 rounded-lg border border-gray-700/50">
-                            <p className="font-semibold text-blue-400">Publisher</p>
-                            <p>{book.volumeInfo.publisher}</p>
-                          </div>
-                          <div className="bg-gray-700/30 backdrop-blur-sm p-4 rounded-lg border border-gray-700/50">
-                            <p className="font-semibold text-blue-400">Categories</p>
-                            <p>{book.volumeInfo.categories?.join(", ")}</p>
-                          </div>
-                          <div className="bg-gray-700/30 backdrop-blur-sm p-4 rounded-lg border border-gray-700/50">
-                            <p className="font-semibold text-blue-400">Published Date</p>
-                            <p>{book.volumeInfo.publishedDate}</p>
-                          </div>
-                        </div>
-                      </TabsContent>
-
-                      <TabsContent value="description" className="mt-4">
-                        <div className="bg-gray-700/30 backdrop-blur-sm p-4 rounded-lg border border-gray-700/50">
-                          <p className="text-gray-300 leading-relaxed">{book.volumeInfo.description}</p>
-                        </div>
-                      </TabsContent>
-                    </Tabs>
-                  </motion.div>
-
-                  <motion.div
-                    initial={{ y: 20, opacity: 0 }}
-                    animate={{ y: 0, opacity: 1 }}
-                    transition={{ delay: 0.8 }}
-                  >
-                    <Button 
-                      onClick={handlePlaceOrderClick} 
-                      className="w-full bg-gradient-to-r from-blue-500/80 to-purple-500/80 hover:from-blue-600/80 hover:to-purple-600/80 text-white py-6 text-lg font-semibold rounded-lg transition-all duration-300 transform hover:scale-105 backdrop-blur-sm"
-                    >
-                      <FaBookOpen className="mr-2" />
-                      Place Order
-                    </Button>
-                  </motion.div>
-                </div>
-              </div>
-            </Card>
-          </div>
-        </motion.div>
-
-        {/* Other Sellers Section - Only show if there are other sellers */}
-        {sellers.filter(seller => seller.sellerId !== sellerId).length > 0 && (
+        <div className="grid lg:grid-cols-12 gap-16 mb-24">
+          {/* Main Book Visual */}
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.8 }}
-            className="mb-12"
+            key={`img-${isbn}`} // unique key forces animation to reset
+            className="lg:col-span-5 flex flex-col items-center"
           >
-            <h2 className="text-3xl font-bold text-white text-center mb-8">
-              Other Sellers
-            </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-              <AnimatePresence>
-                {sellers
-                  .filter(seller => seller.sellerId !== sellerId)
-                  .map((seller) => (
-                  <Dialog key={seller.sellerId}>
+            <div className="relative w-full max-w-[420px] group">
+              <div className="relative bg-[#111113] p-8 rounded-[2.5rem] border border-white/5 shadow-2xl">
+                <img
+                  src={book.volumeInfo.imageLinks?.thumbnail}
+                  alt={book.volumeInfo.title}
+                  className="w-full h-auto min-h-[450px] object-contain rounded-xl"
+                />
+              </div>
+            </div>
+
+            {sellerInfo && (
+                <Dialog>
                     <DialogTrigger asChild>
-                      <motion.div
-                        initial={{ opacity: 0, scale: 0.9 }}
-                        animate={{ opacity: 1, scale: 1 }}
-                        exit={{ opacity: 0, scale: 0.9 }}
-                        whileHover={{ scale: 1.02, y: -5 }}
-                        whileTap={{ scale: 0.98 }}
-                        className="cursor-pointer"
-                      >
-                        <Card className="bg-gray-800/50 backdrop-blur-sm border border-gray-700/50 shadow-lg hover:shadow-xl transition-all duration-300">
-                          <div className="p-4">
-                            <div className="flex flex-col items-center space-y-3">
-                              <div className="relative">
-                                <div className="absolute -inset-1 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full blur opacity-30"></div>
-                                <img
-                                  src={seller.image}
-                                  alt={seller.storeName}
-                                  className="relative w-20 h-20 object-cover rounded-full border-2 border-blue-500"
-                                />
-                              </div>
-                              <h3 className="text-lg font-semibold text-white text-center">
-                                {seller.storeName}
-                              </h3>
-                              <p className="text-sm text-gray-400 text-center">
-                                {seller.address.city}, {seller.address.state}
-                              </p>
-                              <Button className="w-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white">
-                                View Details
-                              </Button>
-                            </div>
-                          </div>
-                        </Card>
-                      </motion.div>
+                        <Button variant="ghost" className="mt-8 text-zinc-400 gap-2">
+                            <FaStore className="text-blue-500" /> Distributed by {sellerInfo.storeName}
+                        </Button>
                     </DialogTrigger>
-                    <DialogContent className="bg-gray-800/50 backdrop-blur-sm border border-gray-700/50 max-w-2xl">
-                      <DialogHeader>
-                        <DialogTitle className="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">
-                          {seller.storeName}
-                        </DialogTitle>
-                      </DialogHeader>
-                      <div className="space-y-6">
-                        <div className="flex justify-center">
-                          <div className="relative">
-                            <div className="absolute -inset-1 bg-gradient-to-r from-blue-500 to-purple-500 rounded-full blur opacity-30"></div>
-                            <img
-                              src={seller.image}
-                              alt={seller.storeName}
-                              className="relative w-32 h-32 object-cover rounded-full border-4 border-blue-500"
-                            />
-                          </div>
-                        </div>
-                        
-                        <div className="space-y-4">
-                          <div className="bg-gray-700/50 p-4 rounded-lg backdrop-blur-sm">
-                            <p className="text-gray-300">
-                              <span className="font-semibold text-blue-400">Seller:</span> {seller.name}
-                            </p>
-                            <p className="text-gray-300 mt-2">
-                              <span className="font-semibold text-blue-400">Description:</span> {seller.storeDescription}
-                            </p>
-                          </div>
-                          
-                          <div className="bg-gray-700/50 p-4 rounded-lg backdrop-blur-sm">
-                            <p className="text-gray-300">
-                              <span className="font-semibold text-blue-400">Location:</span>{" "}
-                              {`${seller.address.street}, ${seller.address.city}, ${seller.address.state}, ${seller.address.zipCode}`}
-                            </p>
-                          </div>
-                          
-                          <div className="bg-gray-700/50 p-4 rounded-lg backdrop-blur-sm">
-                            <p className="text-gray-300">
-                              <span className="font-semibold text-blue-400">Contact:</span> {seller.email}
-                            </p>
-                          </div>
-                          
-                          <div className="flex justify-center space-x-4">
-                            <motion.a
-                              whileHover={{ scale: 1.2, rotate: 10 }}
-                              href={seller.socialMediaLinks?.facebook}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-blue-500 hover:text-blue-400 transition-colors duration-300"
-                            >
-                              <FaFacebookF size={24} />
-                            </motion.a>
-                            <motion.a
-                              whileHover={{ scale: 1.2, rotate: -10 }}
-                              href={seller.socialMediaLinks?.instagram}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-pink-500 hover:text-pink-400 transition-colors duration-300"
-                            >
-                              <FaInstagram size={24} />
-                            </motion.a>
-                            <motion.a
-                              whileHover={{ scale: 1.2, rotate: 10 }}
-                              href={seller.socialMediaLinks?.linkedin}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-blue-400 hover:text-blue-300 transition-colors duration-300"
-                            >
-                              <FaLinkedin size={24} />
-                            </motion.a>
-                          </div>
-                          
-                          <Button
-                            onClick={() => alert(`Contacting ${seller.name}`)}
-                            className="w-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white py-3 rounded-lg transition-all duration-300 transform hover:scale-105"
-                          >
-                            Contact Seller
-                          </Button>
-                        </div>
-                      </div>
+                    <DialogContent className="bg-[#0f0f11] border-white/10 text-white rounded-[2rem]">
+                        <DialogHeader className="p-4 flex flex-col items-center">
+                            <img src={sellerInfo.image} className="w-24 h-24 rounded-full border-4 border-blue-500 mb-4 object-cover" />
+                            <DialogTitle className="text-2xl font-black italic">{sellerInfo.storeName}</DialogTitle>
+                        </DialogHeader>
                     </DialogContent>
-                  </Dialog>
-                ))}
-              </AnimatePresence>
+                </Dialog>
+            )}
+          </motion.div>
+
+          {/* Book Content */}
+          <motion.div 
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            key={`content-${isbn}`}
+            className="lg:col-span-7"
+          >
+            <div className="space-y-6">
+              <Badge className="bg-blue-600/10 text-blue-500 px-4 py-1.5 rounded-full font-bold uppercase tracking-widest text-[10px]">
+                Verified Listing
+              </Badge>
+              <h1 className="text-5xl md:text-7xl font-black uppercase tracking-tighter italic leading-[0.9] bg-gradient-to-b from-white to-zinc-500 bg-clip-text text-transparent">
+                {book.volumeInfo.title}
+              </h1>
+              <p className="text-xl md:text-2xl text-zinc-400 font-medium italic">
+                by {book.volumeInfo.authors?.join(", ")}
+              </p>
+
+              <div className="bg-white/[0.03] border border-white/5 rounded-3xl p-8 mt-8">
+                <h4 className="text-[10px] font-black uppercase tracking-[0.3em] text-zinc-500 mb-4">Description</h4>
+                <ScrollArea className="h-[180px] pr-4">
+                  <p className="text-zinc-400 leading-relaxed text-sm">
+                    {book.volumeInfo.description?.replace(/<[^>]*>?/gm, '') || "Summary not available."}
+                  </p>
+                </ScrollArea>
+              </div>
+
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
+                 <QuickInfo label="Pages" value={book.volumeInfo.pageCount || "N/A"} />
+                 <QuickInfo label="Language" value={book.volumeInfo.language?.toUpperCase() || "EN"} />
+                 <QuickInfo label="Publisher" value={book.volumeInfo.publisher?.split(' ')[0] || "Global"} />
+                 <QuickInfo label="Year" value={book.volumeInfo.publishedDate?.split('-')[0] || "2024"} />
+              </div>
+
+              <Button 
+                onClick={handlePlaceOrderClick}
+                className="w-full h-20 bg-blue-600 hover:bg-blue-500 text-white rounded-[1.5rem] mt-10 text-lg font-black uppercase tracking-[0.2em] shadow-2xl transition-all"
+              >
+                <FaShoppingCart className="mr-3" /> Process Order
+              </Button>
             </div>
           </motion.div>
-        )}
+        </div>
 
-        {/* Suggested Books Section */}
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 1 }}
-          className="mb-12"
-        >
-          <h2 className="text-3xl font-bold text-white text-center mb-8">
-            Continue Shopping
-          </h2>
-          {isLoading ? (
-            <div className="flex justify-center items-center h-64">
-              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-              {suggestedBooks.map((book, index) => {
-                const price = book.spCluster?.[0]?.price;
-                const thumbnail = book.data.volumeInfo?.imageLinks?.thumbnail;
-                const title = book.data.volumeInfo?.title || "Unknown Title";
-                const authors = book.data.volumeInfo?.authors?.join(", ") || "Unknown Author";
-
-                return (
-                  <motion.div
-                    key={index}
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: 0.1 * index }}
-                    whileHover={{ scale: 1.02, y: -5 }}
-                    whileTap={{ scale: 0.98 }}
-                    className="cursor-pointer"
-                    onClick={() => handleBookClick(book.spCluster?.[0]?.sellerId, book.isbn)}
-                  >
-                    <Card className="bg-gray-800/50 min-h-[400px] backdrop-blur-sm border border-gray-700/50 shadow-lg hover:shadow-xl transition-all duration-300">
-                      <div className="p-4 h-full flex flex-col">
-                        <div className="relative mb-4 flex-shrink-0">
-                          <div className="absolute -inset-1 blur opacity-30"></div>
-                          <img
-                            src={thumbnail || "https://via.placeholder.com/200x300"}
-                            alt={title}
-                            className="relative w-full h-[220px] object-contain rounded-lg"
-                          />
-                        </div>
-                        <div className="space-y-2 flex-grow flex flex-col">
-                          <h3 className="text-base font-semibold text-white line-clamp-2">
-                            {title}
-                          </h3>
-                          <p className="text-xs text-gray-400 line-clamp-1">
-                            {authors}
-                          </p>
-                          <div className="flex items-center justify-between mt-auto pt-2">
-                            <div className="flex items-center space-x-1">
-                              <FaStar className="text-yellow-400 w-3 h-3" />
-                              <span className="text-gray-300 text-sm">4.8</span>
-                            </div>
-                            <span className="text-blue-400 font-semibold text-sm">₹ {price}</span>
-                          </div>
-                        </div>
-                      </div>
-                    </Card>
-                  </motion.div>
-                );
-              })}
-            </div>
-          )}
-          <div className="text-center mt-8">
-            <Button 
-              className="bg-gradient-to-r from-blue-500/80 to-purple-500/80 hover:from-blue-600/80 hover:to-purple-600/80 text-white px-8 py-3 rounded-lg transition-all duration-300 transform hover:scale-105 backdrop-blur-sm"
-              onClick={handleViewAllBooks}
-            >
-              View All Books
-            </Button>
+        {/* Recommendations Section */}
+        <section className="pt-20 border-t border-white/5">
+          <div className="flex items-center justify-between mb-12">
+            <h2 className="text-3xl font-black uppercase italic tracking-tighter">Recommended</h2>
           </div>
-        </motion.div>
+
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            {suggestedBooks.map((b, i) => (
+              <motion.div
+                key={`${b.isbn}-${i}`}
+                whileHover={{ y: -10 }}
+                onClick={() => handleBookClick(b.spCluster?.[0]?.sellerId, b.isbn)}
+                className="group cursor-pointer"
+              >
+                {/* Fixed: Aspect-ratio wrapper for uniform card sizes */}
+                <div className="relative aspect-[2/3] w-full bg-[#111113] border border-white/5 rounded-2xl overflow-hidden mb-4 p-6 flex items-center justify-center">
+                  <img
+                    src={b.data.volumeInfo?.imageLinks?.thumbnail || "https://via.placeholder.com/200x300"}
+                    alt={b.data.volumeInfo?.title}
+                    className="h-full w-full object-contain group-hover:scale-110 transition-transform duration-500"
+                  />
+                  <div className="absolute top-4 right-4 bg-blue-600 px-3 py-1 rounded-lg font-black text-xs shadow-xl">
+                    ₹{b.spCluster?.[0]?.price}
+                  </div>
+                </div>
+                <h3 className="font-bold text-sm truncate text-zinc-200 group-hover:text-blue-500 transition-colors uppercase italic tracking-tighter">
+                  {b.data.volumeInfo?.title}
+                </h3>
+              </motion.div>
+            ))}
+          </div>
+        </section>
       </div>
-    </motion.div>
+    </div>
   );
 };
+
+const QuickInfo = ({ label, value }) => (
+  <div className="bg-white/[0.02] border border-white/[0.04] p-4 rounded-2xl text-center min-w-0">
+    <span className="text-[9px] font-black uppercase tracking-widest text-zinc-500 block mb-1 truncate">{label}</span>
+    <span className="text-xs font-bold text-zinc-200 truncate block">{value}</span>
+  </div>
+);
 
 export default BookDetails;

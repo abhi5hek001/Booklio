@@ -1,8 +1,8 @@
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import { BookOpen } from "lucide-react";
+import { BookOpen, Sparkles, Trash2 } from "lucide-react";
 import PropTypes from "prop-types";
 
 const GenreFilter = ({ bookData, selectedGenres, setSelectedGenres }) => {
@@ -15,98 +15,125 @@ const GenreFilter = ({ bookData, selectedGenres, setSelectedGenres }) => {
   };
 
   return (
-    <motion.div
-      initial={{ x: -100, opacity: 0 }}
-      animate={{ x: 0, opacity: 1 }}
-      transition={{ duration: 0.5 }}
-      className="fixed top-[120px] left-4 w-60 bg-gray-800/95 backdrop-blur-sm rounded-lg shadow-xl border border-gray-700 overflow-hidden"
-    >
-      <div className="p-4 bg-gray-900/50 border-b border-gray-700">
-        <div className="flex items-center space-x-2">
-          <BookOpen className="w-5 h-5 text-blue-400" />
-          <h2 className="text-lg font-semibold text-gray-100">Genre Filters</h2>
+   <motion.div
+  initial={{ opacity: 0 }}
+  animate={{ opacity: 1 }}
+  className="flex flex-col h-full bg-[#0d0d0f] text-slate-200 pt-24"
+>
+      {/* Header Section */}
+      <div className="p-8 pb-4">
+        <div className="flex items-center gap-2 mb-2">
+          <div className="p-2 bg-blue-500/10 rounded-lg">
+            <BookOpen className="w-4 h-4 text-blue-500" />
+          </div>
+          <h2 className="text-sm font-black uppercase tracking-[0.2em] text-white">
+            Library Genres
+          </h2>
         </div>
-        <p className="text-sm text-gray-400 mt-1">
-          Select genres to filter books
+        <p className="text-[10px] font-bold text-slate-500 uppercase tracking-widest leading-relaxed">
+          Filter your selection
         </p>
       </div>
 
-      <ScrollArea className="h-[calc(100vh-250px)] px-4 py-2">
-        <div className="space-y-4">
+      <ScrollArea className="flex-1 px-4">
+        <div className="space-y-1 py-4">
           {/* "All Books" Option */}
-          <div className="relative flex items-center space-x-2 group">
-            <Checkbox
-              id="all-books"
-              checked={selectedGenres.length === 0}
-              onCheckedChange={() => setSelectedGenres([])}
-              className="data-[state=checked]:bg-blue-500 data-[state=checked]:border-blue-500"
-            />
-            <Label
-              htmlFor="all-books"
-              className="text-sm font-medium leading-none group-hover:text-blue-400 transition-colors cursor-pointer"
-            >
-              All Books
-            </Label>
-            {selectedGenres.length === 0 && (
-              <motion.div
-                layoutId="activeIndicator"
-                className="absolute -left-4 top-1/2 -translate-y-1/2 w-1 h-4 bg-blue-500 rounded-r-full"
+          <div 
+            className={`relative flex items-center justify-between p-3 rounded-xl transition-all duration-300 cursor-pointer group ${
+              selectedGenres.length === 0 ? "bg-blue-500/10 border border-blue-500/20" : "hover:bg-white/5 border border-transparent"
+            }`}
+            onClick={() => setSelectedGenres([])}
+          >
+            <div className="flex items-center space-x-3">
+              <Checkbox
+                id="all-books"
+                checked={selectedGenres.length === 0}
+                onCheckedChange={() => setSelectedGenres([])}
+                className="border-slate-700 data-[state=checked]:bg-blue-500 data-[state=checked]:border-blue-500"
               />
-            )}
+              <Label
+                htmlFor="all-books"
+                className="text-xs font-bold uppercase tracking-widest cursor-pointer group-hover:text-white transition-colors"
+              >
+                All Collections
+              </Label>
+            </div>
+            <Sparkles className={`w-3 h-3 ${selectedGenres.length === 0 ? "text-blue-500" : "text-slate-700"}`} />
           </div>
 
-          <div className="h-px bg-gray-700/50" /> {/* Divider */}
+          <div className="h-px bg-white/5 my-4 mx-2" />
 
           {/* Genre Options */}
-          <div className="space-y-3">
-            {Object.keys(bookData).map((genre) => (
+          {Object.keys(bookData).map((genre) => {
+            const isSelected = selectedGenres.includes(genre);
+            const id = genre.replace(/\s+/g, "-").toLowerCase();
+
+            return (
               <div
                 key={genre}
-                className="relative flex items-center space-x-2 group"
+                className={`relative flex items-center justify-between p-3 rounded-xl transition-all duration-300 cursor-pointer group ${
+                  isSelected ? "bg-white/5 border border-white/10" : "hover:bg-white/5 border border-transparent"
+                }`}
+                onClick={() => handleGenreChange(genre, !isSelected)}
               >
-                <Checkbox
-                  id={genre.replace(/\s+/g, "-").toLowerCase()}
-                  checked={selectedGenres.includes(genre)}
-                  onCheckedChange={(checked) => handleGenreChange(genre, checked)}
-                  className="data-[state=checked]:bg-blue-500 data-[state=checked]:border-blue-500"
-                />
-                <Label
-                  htmlFor={genre.replace(/\s+/g, "-").toLowerCase()}
-                  className="text-sm font-medium leading-none group-hover:text-blue-400 transition-colors cursor-pointer"
-                >
-                  {genre.charAt(0).toUpperCase() + genre.slice(1)}
-                </Label>
-                {selectedGenres.includes(genre) && (
+                <div className="flex items-center space-x-3 min-w-0">
+                  <Checkbox
+                    id={id}
+                    checked={isSelected}
+                    onCheckedChange={(checked) => handleGenreChange(genre, checked)}
+                    className="border-slate-700 data-[state=checked]:bg-blue-500 data-[state=checked]:border-blue-500"
+                    onClick={(e) => e.stopPropagation()} // Prevent double trigger
+                  />
+                  <Label
+                    htmlFor={id}
+                    className={`text-xs font-bold uppercase tracking-widest cursor-pointer truncate transition-colors ${
+                      isSelected ? "text-blue-400" : "text-slate-400 group-hover:text-slate-200"
+                    }`}
+                  >
+                    {genre}
+                  </Label>
+                </div>
+                
+                <span className={`text-[10px] font-black font-mono ${isSelected ? "text-blue-500" : "text-slate-600"}`}>
+                  {bookData[genre].length.toString().padStart(2, '0')}
+                </span>
+
+                {isSelected && (
                   <motion.div
-                    layoutId="activeIndicator"
-                    className="absolute -left-4 top-1/2 -translate-y-1/2 w-1 h-4 bg-blue-500 rounded-r-full"
+                    layoutId="activeGlow"
+                    className="absolute inset-0 bg-blue-500/5 rounded-xl -z-10"
                   />
                 )}
-                <span className="ml-auto text-xs text-gray-500">
-                  {bookData[genre].length}
-                </span>
               </div>
-            ))}
-          </div>
+            );
+          })}
         </div>
       </ScrollArea>
 
-      {/* Selected Filters Summary */}
-      {selectedGenres.length > 0 && (
-        <div className="p-4 bg-gray-900/50 border-t border-gray-700">
-          <div className="flex items-center justify-between">
-            <span className="text-sm text-gray-400">
-              {selectedGenres.length} genre{selectedGenres.length > 1 ? 's' : ''} selected
-            </span>
-            <button
-              onClick={() => setSelectedGenres([])}
-              className="text-xs text-blue-400 hover:text-blue-300 transition-colors"
-            >
-              Clear all
-            </button>
-          </div>
-        </div>
-      )}
+      {/* Footer / Summary */}
+      <AnimatePresence>
+        {selectedGenres.length > 0 && (
+          <motion.div 
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: 20, opacity: 0 }}
+            className="p-6 bg-[#0a0a0c] border-t border-white/5"
+          >
+            <div className="flex items-center justify-between bg-white/5 p-3 rounded-xl border border-white/5">
+              <span className="text-[10px] font-black text-slate-500 uppercase tracking-tighter">
+                {selectedGenres.length} Filtered
+              </span>
+              <button
+                onClick={() => setSelectedGenres([])}
+                className="flex items-center gap-2 text-[10px] font-black text-red-500 hover:text-red-400 uppercase tracking-widest transition-colors"
+              >
+                <Trash2 size={12} />
+                Clear
+              </button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 };
@@ -118,4 +145,3 @@ GenreFilter.propTypes = {
 };
 
 export default GenreFilter;
-  

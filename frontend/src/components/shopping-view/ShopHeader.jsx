@@ -1,74 +1,78 @@
-import { Library } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
-import { toast } from "react-hot-toast";
-// import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { useEffect, useState } from "react";
+import { toast } from 'react-hot-toast';
+import { useNavigate, Link } from "react-router-dom";
 
 function ShoppingHeader() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const navigate = useNavigate();
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [scrolled, setScrolled] = useState(false);
+    const navigate = useNavigate();
 
-  // Check if both token and role exist in localStorage on component mount
-  useEffect(() => {
-    const token = localStorage.getItem("accessToken");
-    const role = localStorage.getItem("role");
-    setIsLoggedIn(!!token && !!role); // Set logged in state based on both token and role
-  }, []);
+    // Effect for checking auth
+    useEffect(() => {
+        const token = localStorage.getItem("accessToken");
+        const role = localStorage.getItem("role");
+        setIsLoggedIn(!!token && !!role);
 
-  // Handle logout by clearing the token and role from localStorage
-  const handleLogout = () => {
-    localStorage.removeItem("accessToken");
-    localStorage.removeItem("role");
-    setIsLoggedIn(false);
-    toast.success("Logout successful!"); // Show success toast
-    navigate("/"); // Redirect to homepage after logout
-  };
+        // Effect for scroll styling
+        const handleScroll = () => setScrolled(window.scrollY > 20);
+        window.addEventListener("scroll", handleScroll);
+        return () => window.removeEventListener("scroll", handleScroll);
+    }, []);
 
-  return (
-    <header className="fixed top-0 z-40 w-full text-white border-b bg-backgroundContrast">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex h-16 sm:h-20 items-center justify-between">
-          {/* Logo */}
-          <Link to="/shop" className="flex items-center gap-2">
-            <Library className="h-5 w-5 sm:h-6 sm:w-6" />
-            <span className="font-bold text-2xl sm:text-3xl md:text-4xl font-unbounded">BOOKLIO</span>
-          </Link>
+    const handleLogout = (e) => {
+        e.preventDefault();
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("role");
+        setIsLoggedIn(false);
+        toast.success("Logout successful!");
+        navigate("/");
+    };
 
-          {/* Authentication Actions */}
-          <div className="flex items-center gap-2 sm:gap-4">
-            <div>
-              <a
-                href=""
-                className="text-xs sm:text-sm px-3 sm:px-4 py-1.5 sm:py-2 rounded cursor-pointer bg-blue-600 hover:bg-blue-700 transition-colors"
-                onClick={() => navigate("/user")}
-              >
-                My Account
-              </a>
+    return (
+        <header 
+            className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
+                scrolled 
+                ? "bg-backgroundContrast/90 backdrop-blur-md shadow-lg py-2" 
+                : "bg-backgroundContrast py-4"
+            }`}
+        >
+            <div className="container mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+                {/* Logo Section */}
+                <Link to="/shop" className="group flex items-center gap-2">
+                    <p className="font-unbounded text-2xl md:text-3xl font-bold tracking-tighter text-white transition-colors group-hover:text-blue-400">
+                        Booklio<span className="text-blue-500">.</span>
+                    </p>
+                </Link>
+
+                {/* Navigation / Actions */}
+                <nav className="flex items-center gap-4 sm:gap-6">
+                    {isLoggedIn ? (
+                        <div className="flex items-center gap-3 sm:gap-4">
+                            <button
+                                onClick={() => navigate("/user")}
+                                className="text-xs sm:text-sm font-medium px-4 sm:px-5 py-2 rounded-full border border-blue-500/50 text-blue-400 hover:bg-blue-500 hover:text-white transition-all duration-200 active:scale-95"
+                            >
+                                My Account
+                            </button>
+                            <button
+                                onClick={handleLogout}
+                                className="text-xs sm:text-sm font-medium px-4 sm:px-5 py-2 rounded-full border border-red-500/50 text-red-400 hover:bg-red-500 hover:text-white transition-all duration-200 active:scale-95"
+                            >
+                                Logout
+                            </button>
+                        </div>
+                    ) : (
+                        <button
+                            onClick={() => navigate("/auth/login")}
+                            className="text-xs sm:text-sm font-semibold px-5 sm:px-6 py-2 sm:py-2.5 rounded-full bg-blue-600 hover:bg-blue-500 text-white shadow-md shadow-blue-900/20 transition-all duration-200 active:scale-95"
+                        >
+                            Login Now
+                        </button>
+                    )}
+                </nav>
             </div>
-            <div>
-              {isLoggedIn ? (
-                <a
-                  href=""
-                  className="text-xs sm:text-sm px-3 sm:px-4 py-1.5 sm:py-2 rounded cursor-pointer bg-red-600 hover:bg-red-700 transition-colors"
-                  onClick={handleLogout}
-                >
-                  Logout
-                </a>
-              ) : (
-                <a
-                  href=""
-                  className="text-xs sm:text-sm px-3 sm:px-4 py-1.5 sm:py-2 rounded cursor-pointer bg-blue-600 hover:bg-blue-700 transition-colors"
-                  onClick={() => navigate("/auth/login")}
-                >
-                  Login Now
-                </a>
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
-    </header>
-  );
+        </header>
+    );
 }
 
 export default ShoppingHeader;

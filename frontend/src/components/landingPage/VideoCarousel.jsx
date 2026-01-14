@@ -4,6 +4,8 @@ import { animate, motion, useMotionValue, useMotionValueEvent, useScroll } from 
 import { useEffect, useState } from 'react';
 import ZoomOutCarousel from './ZoomOutCarousel';
 import { useLocation } from "react-router-dom";
+import { MdAutoAwesome } from "react-icons/md";
+
 
 export default function VideoCarousel() {
     const location = useLocation();
@@ -70,10 +72,47 @@ export default function VideoCarousel() {
             <motion.div animate={carouselVariant} className="bg-backgroundContrast text-black">
 
                 {
-                    location.pathname == "/shop" && 
-                    <h2 className="text-4xl font-bold text-center mb-10 text-blue-400">Best Sellers</h2>
-                }
+                    location.pathname === "/shop" && (
+                        <div className="relative flex flex-col items-center justify-center pt-16 pb-10 overflow-hidden">
+                            {/* Soft Ambient Glow - refined for a cleaner look */}
+                            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-16 bg-blue-600/10 blur-[80px] -z-10" />
 
+                            <motion.div
+                                initial={{ opacity: 0, y: 15 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                transition={{ duration: 0.6, ease: "easeOut" }}
+                                className="text-center px-6"
+                            >
+                                {/* Simplified Label */}
+                                <div className="flex justify-center items-center gap-2 text-blue-500 mb-3">
+                                    <MdAutoAwesome className="w-4 h-4" />
+                                    <span className="text-[10px] md:text-xs font-bold uppercase tracking-[0.3em]">
+                                        Community Favorites
+                                    </span>
+                                </div>
+
+                                {/* Responsive Main Heading */}
+                                <h2 className="text-3xl md:text-5xl lg:text-6xl font-bold text-white tracking-tight">
+                                    Best <span className="text-blue-500">Sellers</span>
+                                </h2>
+
+                                {/* Simple Subtext to match FAQ style */}
+                                <p className="text-slate-400 text-sm md:text-base mt-3 max-w-xs md:max-w-md mx-auto">
+                                    The most loved stories in the Booklio collection right now.
+                                </p>
+
+                                {/* Minimalist Accent Line */}
+                                <motion.div
+                                    initial={{ scaleX: 0 }}
+                                    whileInView={{ scaleX: 1 }}
+                                    transition={{ duration: 0.8, delay: 0.3 }}
+                                    className="h-[2px] w-12 bg-blue-500 mx-auto mt-6 rounded-full"
+                                />
+                            </motion.div>
+                        </div>
+                    )
+                }
                 {
                     location.pathname !== "/shop" && <ZoomOutCarousel />
                 }

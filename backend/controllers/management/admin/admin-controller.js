@@ -141,7 +141,7 @@ const memberRegister = async (req, res) => {
         </p>
       </div>
       <div style="background-color: #333; padding: 15px; text-align: center; color: #fff; font-size: 14px;">
-        <p>© 2024 Booklio. All rights reserved.</p>
+        <p>© 2026 Booklio. All rights reserved.</p>
         <p><a href="https://booklio.com" style="color: #4CAF50; text-decoration: none;">Visit our website</a></p>
       </div>
     </div>
@@ -275,7 +275,7 @@ const memberRegisterV4 = async (req, res) => {
         </p>
       </div>
       <div style="background-color: #333; padding: 15px; text-align: center; color: #fff; font-size: 14px;">
-        <p>© 2024 Booklio. All rights reserved.</p>
+        <p>© 2026 Booklio. All rights reserved.</p>
         <p><a href="https://booklio.com" style="color: #4CAF50; text-decoration: none;">Visit our website</a></p>
       </div>
     </div>
@@ -390,7 +390,7 @@ const updateMemberRole = async (req, res) => {
         </p>
       </div>
       <div style="background-color: #333; padding: 15px; text-align: center; color: #fff; font-size: 14px;">
-        <p>© 2024 Booklio. All rights reserved.</p>
+        <p>© 2026 Booklio. All rights reserved.</p>
         <p><a href="https://booklio.com" style="color: #4CAF50; text-decoration: none;">Visit our website</a></p>
       </div>
     </div>
@@ -485,7 +485,7 @@ const deleteMember = async (req, res) => {
         </p>
       </div>
       <div style="background-color: #333; padding: 15px; text-align: center; color: #fff; font-size: 14px;">
-        <p>© 2024 Booklio. All rights reserved.</p>
+        <p>© 2026 Booklio. All rights reserved.</p>
         <p><a href="https://booklio.com" style="color: #4CAF50; text-decoration: none;">Visit our website</a></p>
       </div>
     </div>
@@ -655,7 +655,7 @@ const deleteUser = async (req, res) => {
         </p>
       </div>
       <div style="background-color: #333; padding: 15px; text-align: center; color: #fff; font-size: 14px;">
-        <p>© 2024 Booklio. All rights reserved.</p>
+        <p>© 2026 Booklio. All rights reserved.</p>
         <p><a href="https://booklio.com" style="color: #4CAF50; text-decoration: none;">Visit our website</a></p>
       </div>
     </div>
@@ -804,7 +804,7 @@ const getUserData = async (req, res) => {
 //         </p>
 //       </div>
 //       <div style="background-color: #333; padding: 15px; text-align: center; color: #fff; font-size: 14px;">
-//         <p>© 2024 Booklio. All rights reserved.</p>
+//         <p>© 2026 Booklio. All rights reserved.</p>
 //         <p><a href="https://booklio.com" style="color: #4CAF50; text-decoration: none;">Visit our website</a></p>
 //       </div>
 //     </div>
@@ -913,7 +913,7 @@ const deleteSeller = async (req, res) => {
         </p>
       </div>
       <div style="background-color: #333; padding: 15px; text-align: center; color: #fff; font-size: 14px;">
-        <p>© 2024 Booklio. All rights reserved.</p>
+        <p>© 2026 Booklio. All rights reserved.</p>
         <p><a href="https://booklio.com" style="color: #4CAF50; text-decoration: none;">Visit our website</a></p>
       </div>
     </div>
@@ -1077,7 +1077,7 @@ const getAllData = async (req, res) => {
  *                   type: boolean
  *                 totalPendingPayCut:
  *                   type: number
- *                 totalCanceledPayCut:
+ *                 totalCancelledPayCut:
  *                   type: number
  *                 totalCompletedPayCut:
  *                   type: number
@@ -1150,7 +1150,7 @@ const paycutFunc = async (req, res) => {
 
     // Extract totals for each status
     const pendingPayCut = payCuts.find((entry) => entry._id === "pending");
-    const canceledPayCut = payCuts.find((entry) => entry._id === "canceled");
+    const cancelledPayCut = payCuts.find((entry) => entry._id === "cancelled");
     const completedPayCut = payCuts.find((entry) => entry._id === "completed");
 
 
@@ -1160,7 +1160,7 @@ const paycutFunc = async (req, res) => {
       msg: "Paycuts retrieved successfully",
       data: {
         totalPendingPayCut: pendingPayCut?.totalPayCut || 0,
-        totalCanceledPayCut: canceledPayCut?.totalPayCut || 0,
+        totalCancelledPayCut: cancelledPayCut?.totalPayCut || 0,
         totalCompletedPayCut: completedPayCut?.totalPayCut || 0,
         payCuts: payCuts, // Optional: Include full details
       },

@@ -23,10 +23,10 @@ import { Skeleton } from "@/components/ui/skeleton";
 const AdminSales = () => {
   const [payCutData, setPayCutData] = useState({
     totalPendingPayCut: 0,
-    totalCanceledPayCut: 0,
+    totalCancelledPayCut: 0,
     totalCompletedPayCut: 0,
     pendingDetails: [],
-    canceledDetails: [],
+    cancelledDetails: [],
     completedDetails: [],
   });
   const [loading, setLoading] = useState(true);
@@ -40,13 +40,13 @@ const AdminSales = () => {
         if (data?.data) {
           setPayCutData({
             totalPendingPayCut: data.data.totalPendingPayCut,
-            totalCanceledPayCut: data.data.totalCanceledPayCut,
+            totalCancelledPayCut: data.data.totalCancelledPayCut,
             totalCompletedPayCut: data.data.totalCompletedPayCut,
             pendingDetails:
               data.data.payCuts.find((item) => item._id === "pending")
                 ?.details || [],
-            canceledDetails:
-              data.data.payCuts.find((item) => item._id === "canceled")
+            cancelledDetails:
+              data.data.payCuts.find((item) => item._id === "cancelled")
                 ?.details || [],
             completedDetails:
               data.data.payCuts.find((item) => item._id === "completed")
@@ -61,23 +61,23 @@ const AdminSales = () => {
 
   const chartData = [
     { name: "Pending", value: payCutData.totalPendingPayCut, color: "#FFCC80" },
-    { name: "Canceled", value: payCutData.totalCanceledPayCut, color: "#EF5350" },
+    { name: "Cancelled", value: payCutData.totalCancelledPayCut, color: "#EF5350" },
     { name: "Completed", value: payCutData.totalCompletedPayCut, color: "#66BB6A" },
   ];
 
   // Calculate total and percentages
   const totalPayCuts =
     payCutData.totalPendingPayCut +
-    payCutData.totalCanceledPayCut +
+    payCutData.totalCancelledPayCut +
     payCutData.totalCompletedPayCut;
 
   // Create data for trending chart (mockup data since we don't have time series)
   const trendData = [
-    { name: "Jan", pending: 45, canceled: 12, completed: 65 },
-    { name: "Feb", pending: 38, canceled: 15, completed: 72 },
-    { name: "Mar", pending: 52, canceled: 8, completed: 80 },
-    { name: "Apr", pending: 40, canceled: 10, completed: 90 },
-    { name: "May", pending: payCutData.totalPendingPayCut, canceled: payCutData.totalCanceledPayCut, completed: payCutData.totalCompletedPayCut },
+    { name: "Jan", pending: 45, cancelled: 12, completed: 65 },
+    { name: "Feb", pending: 38, cancelled: 15, completed: 72 },
+    { name: "Mar", pending: 52, cancelled: 8, completed: 80 },
+    { name: "Apr", pending: 40, cancelled: 10, completed: 90 },
+    { name: "May", pending: payCutData.totalPendingPayCut, cancelled: payCutData.totalCancelledPayCut, completed: payCutData.totalCompletedPayCut },
   ];
 
   const renderTable = (details) => {
@@ -105,7 +105,7 @@ const AdminSales = () => {
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
                       ${item.status === "pending" ? "bg-yellow-500/10 text-yellow-400" :
-                        item.status === "canceled" ? "bg-red-500/10 text-red-400" :
+                        item.status === "cancelled" ? "bg-red-500/10 text-red-400" :
                           "bg-green-500/10 text-green-400"}`}>
                       {item.status}
                     </span>
@@ -130,8 +130,8 @@ const AdminSales = () => {
     switch (activeTab) {
       case "pending":
         return renderTable(payCutData.pendingDetails);
-      case "canceled":
-        return renderTable(payCutData.canceledDetails);
+      case "cancelled":
+        return renderTable(payCutData.cancelledDetails);
       case "completed":
         return renderTable(payCutData.completedDetails);
       default:
@@ -215,8 +215,8 @@ const AdminSales = () => {
           <CardContent className="p-6">
             <div className="flex justify-between items-center">
               <div>
-                <p className="text-sm font-medium text-gray-400">Canceled Pay Cuts</p>
-                <h3 className="text-3xl font-bold text-white mt-1">{payCutData.totalCanceledPayCut}</h3>
+                <p className="text-sm font-medium text-gray-400">Cancelled Pay Cuts</p>
+                <h3 className="text-3xl font-bold text-white mt-1">{payCutData.totalCancelledPayCut}</h3>
                 <p className="text-sm mt-1 text-gray-400">Rejected transactions</p>
               </div>
               <div className="bg-red-500/10 p-3 rounded-full">
@@ -294,7 +294,7 @@ const AdminSales = () => {
                 <Tooltip contentStyle={{ backgroundColor: '#1F2937', border: '1px solid #374151', color: '#F3F4F6' }} />
                 <Area type="monotone" dataKey="completed" stroke="#66BB6A" fill="#66BB6A" fillOpacity={0.2} />
                 <Area type="monotone" dataKey="pending" stroke="#FFCC80" fill="#FFCC80" fillOpacity={0.2} />
-                <Area type="monotone" dataKey="canceled" stroke="#EF5350" fill="#EF5350" fillOpacity={0.2} />
+                <Area type="monotone" dataKey="cancelled" stroke="#EF5350" fill="#EF5350" fillOpacity={0.2} />
               </AreaChart>
             </ResponsiveContainer>
           </CardContent>
@@ -324,13 +324,13 @@ const AdminSales = () => {
                   Pending ({payCutData.pendingDetails.length})
                 </button>
                 <button
-                  onClick={() => setActiveTab("canceled")}
-                  className={`py-4 px-1 ${activeTab === "canceled"
+                  onClick={() => setActiveTab("cancelled")}
+                  className={`py-4 px-1 ${activeTab === "cancelled"
                     ? "border-b-2 border-red-400 text-red-400"
                     : "text-gray-400 hover:text-gray-300 hover:border-gray-600"
                     } font-medium text-sm transition-colors duration-200`}
                 >
-                  Canceled ({payCutData.canceledDetails.length})
+                  Cancelled ({payCutData.cancelledDetails.length})
                 </button>
                 <button
                   onClick={() => setActiveTab("completed")}

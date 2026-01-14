@@ -1,54 +1,71 @@
 import { useEffect, useState } from "react";
-import { toast } from 'react-hot-toast'
+import { toast } from 'react-hot-toast';
 import { Container } from "./Container";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom"; // Use Link for internal routing
 
 export const Header = () => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [scrolled, setScrolled] = useState(false);
     const navigate = useNavigate();
 
-    // Check if both token and role exist in localStorage on component mount
+    // Effect for checking auth
     useEffect(() => {
         const token = localStorage.getItem("accessToken");
         const role = localStorage.getItem("role");
         setIsLoggedIn(!!token && !!role);
+
+        // Effect for scroll styling
+        const handleScroll = () => setScrolled(window.scrollY > 20);
+        window.addEventListener("scroll", handleScroll);
+        return () => window.removeEventListener("scroll", handleScroll);
     }, []);
 
-    // Handle logout by clearing the token and role from localStorage
-    const handleLogout = () => {
+    const handleLogout = (e) => {
+        e.preventDefault(); // Prevent default anchor behavior
         localStorage.removeItem("accessToken");
         localStorage.removeItem("role");
         setIsLoggedIn(false);
         toast.success("Logout successful!");
-        navigate("/"); // Redirect to homepage after logout
+        navigate("/");
     };
 
     return (
-        <>
-            <header id="header" className="bg-backgroundContrast text-white relative z-20">
-                <div className="sticky top-0 z-20 bg-backgroundContrast text-white">
-                    <Container className="flex justify-between items-center min-h-[--header-row-height]">
-                        <a href="/">
-                            <p className="font-unbounded py-4 text-4xl font-semibold">Booklio</p>
-                        </a>
-                        {isLoggedIn ? (
-                            <a
-                                href=""
-                                className="text-xs px-2 py-1 rounded cursor-pointer bg-red-600" onClick={handleLogout}
+        <header 
+            className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${
+                scrolled 
+                ? "bg-backgroundContrast/90 backdrop-blur-md shadow-lg py-2" 
+                : "bg-backgroundContrast py-4"
+            }`}
+        >
+            <Container className="flex justify-between items-center">
+                {/* Logo Section */}
+                <Link to="/" className="group flex items-center gap-2">
+                    <p className="font-unbounded text-2xl md:text-3xl font-bold tracking-tighter text-white transition-colors group-hover:text-blue-400">
+                        Booklio<span className="text-blue-500">.</span>
+                    </p>
+                </Link>
+
+                {/* Navigation / Actions */}
+                <nav className="flex items-center gap-6">
+                    {isLoggedIn ? (
+                        <div className="flex items-center gap-4">
+                            <button
+                                onClick={handleLogout}
+                                className="text-sm font-medium px-5 py-2 rounded-full border border-red-500/50 text-red-400 hover:bg-red-500 hover:text-white transition-all duration-200 active:scale-95"
                             >
                                 Logout
-                            </a>
-                        ) : (
-                            <a
-                                href=""
-                                className="text-xs px-2 py-1 rounded cursor-pointer bg-blue-600" onClick={() => navigate("/auth/login")}
-                            >
-                                Login Now
-                            </a>
-                        )}
-                    </Container>
-                </div>
-            </header>
-        </>
+                            </button>
+                        </div>
+                    ) : (
+                        <button
+                            onClick={() => navigate("/auth/login")}
+                            className="text-sm font-semibold px-6 py-2.5 rounded-full bg-blue-600 hover:bg-blue-500 text-white shadow-md shadow-blue-900/20 transition-all duration-200 active:scale-95"
+                        >
+                            Login Now
+                        </button>
+                    )}
+                </nav>
+            </Container>
+        </header>
     );
 };

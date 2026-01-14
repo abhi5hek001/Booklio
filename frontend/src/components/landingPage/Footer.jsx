@@ -7,10 +7,10 @@ export const Footer = () => {
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8 justify-items-center text-center">
                     {/* Brand Section - Full width on mobile, 2 cols on tablet, 1 col on desktop */}
                     <div className="space-y-4 col-span-1 sm:col-span-2 lg:col-span-1">
-                        <a href="/" className="inline-block">
-                            <h2 className="font-unbounded text-4xl font-bold bg-blue-500 bg-clip-text text-transparent">
-                                Booklio
-                            </h2>
+                        <a href="/" className="inline-block group">
+                            <p className="font-unbounded text-3xl md:text-4xl font-bold tracking-tighter text-white transition-colors group-hover:text-blue-400">
+                                Booklio<span className="text-blue-500">.</span>
+                            </p>
                         </a>
                         <a 
                             href="/team" 

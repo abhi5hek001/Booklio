@@ -1,4 +1,4 @@
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,7 +14,16 @@ function AuthRegisters() {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+    control
+  } = useForm({
+    // FIX: defaultValues resolves the "uncontrolled input" warning
+    defaultValues: {
+      name: "",
+      email: "",
+      mobile: "",
+      password: ""
+    }
+  });
 
   const navigate = useNavigate();
 
@@ -27,30 +36,35 @@ function AuthRegisters() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(data), // Ensure the payload matches backend expectations
+        body: JSON.stringify(data),
       });
 
-      console.log("Response from server:", response);
+      // We parse the result immediately to handle both success and error bodies
+      const result = await response.json();
 
       if (!response.ok) {
-        // Attempt to parse error details from the server
-        const errorData = await response.json();
-        console.error("Backend error response:", errorData);
-        throw new Error(errorData.message || "Registration failed.");
+        console.error("Backend error response:", result);
+        
+        // FIX: Extracting the specific error from the backend's error array
+        let errorMessage = "Registration failed.";
+        if (result.error && Array.isArray(result.error) && result.error.length > 0) {
+          // Accessing the 'msg' field inside the first error object of the array
+          errorMessage = result.error[0].msg || "Validation error";
+        } else if (result.msg) {
+          errorMessage = result.msg;
+        }
+        
+        throw new Error(errorMessage);
       }
 
-      const result = await response.json();
       console.log("Registration successful:", result);
 
-      // Show success toast and redirect
       toast.success("Mail sent successfully. Verify your account through the mail.", {
         duration: 4000,
       });
       setTimeout(() => navigate("/auth/login"), 3000);
     } catch (error) {
       console.error("Registration error:", error.message);
-
-      // Show error toast
       toast.error(error.message || "An unexpected error occurred.");
     }
   };
@@ -85,28 +99,25 @@ function AuthRegisters() {
                 <Label htmlFor="email" className="text-gray-600">
                   Email
                 </Label>
-                <div className="relative">
-                  <Input
-                    type={showPassword ? "text" : "password"} // Toggles input mask
-                    id="password"
-                    {...register("password", {
-                      required: "Password is required",
-                      minLength: {
-                        value: 6,
-                        message: "Password must be at least 6 characters long",
-                      },
-                    })}
-                    placeholder="Enter your password"
-                    className="mt-2 text-white pr-10" // Padding ensures text doesn't hit icon
-                  />
-                  <button
-                    type="button" // Prevents form from submitting on click
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 mt-1 text-gray-500 hover:text-gray-300 focus:outline-none"
-                  >
-                    {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-                  </button>
-                </div>
+                <Controller
+                  control={control}
+                  name="email"
+                  rules={{
+                    required: "Email is required",
+                    pattern: {
+                      value: /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/,
+                      message: "Invalid email address",
+                    },
+                  }}
+                  render={({ field }) => (
+                    <Input
+                      {...field}
+                      id="email"
+                      placeholder="Enter your email"
+                      className="mt-2 text-white"
+                    />
+                  )}
+                />
                 {errors.email && <p className="text-sm text-red-500">{errors.email.message}</p>}
               </div>
 
@@ -134,19 +145,28 @@ function AuthRegisters() {
                 <Label htmlFor="password" className="text-gray-600">
                   Password
                 </Label>
-                <Input
-                  type="password"
-                  id="password"
-                  placeholder="Enter your password"
-                  {...register("password", {
-                    required: "Password is required",
-                    minLength: {
-                      value: 6,
-                      message: "Password must be at least 6 characters long",
-                    },
-                  })}
-                  className="mt-2 text-white"
-                />
+                <div className="relative">
+                  <Input
+                    type={showPassword ? "text" : "password"}
+                    id="password"
+                    {...register("password", {
+                      required: "Password is required",
+                      minLength: {
+                        value: 6,
+                        message: "Password must be at least 6 characters long",
+                      },
+                    })}
+                    placeholder="Enter your password"
+                    className="mt-2 text-white pr-10"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 mt-1 text-gray-500 hover:text-gray-300 focus:outline-none"
+                  >
+                    {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                  </button>
+                </div>
                 {errors.password && <p className="text-sm text-red-500">{errors.password.message}</p>}
               </div>
 

@@ -21,7 +21,8 @@ app.use(express.json());
 const cors = require("cors");
 app.use(cors({
   origin: [
-    'https://booklio.sahayabhishek.tech'
+    'https://booklio.sahayabhishek.tech',
+    'http://localhost:5174'
   ],
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
   credentials: true

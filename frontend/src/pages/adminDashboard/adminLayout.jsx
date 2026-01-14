@@ -92,9 +92,6 @@ const AdminLayout = () => {
         <header className="bg-gray-800 shadow-lg px-8 py-4 flex justify-between items-center border-b border-gray-700">
           <div className="flex items-center space-x-2">
             <h1 className="text-3xl font-unbounded font-bold text-indigo-400">Booklio</h1>
-            <Badge variant="outline" className="bg-indigo-500/10 text-indigo-400 border-indigo-500/20">
-              Admin
-            </Badge>
           </div>
           
           <div className="flex items-center space-x-4 relative">
