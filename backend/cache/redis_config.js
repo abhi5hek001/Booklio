@@ -9,7 +9,8 @@ async function connectRedis() {
         socket: {
             host: process.env.REDIS_HOST || 'redis',
             port: process.env.REDIS_PORT || 6379
-        }
+        },
+        database: process.env.REDIS_DB || 0
     });
 
     redisClient.on('error', (err) => {

@@ -46,22 +46,19 @@ jobs:
             echo "${{ secrets.DOCKERHUB_TOKEN }}" | docker login -u "${{ secrets.DOCKERHUB_USERNAME }}" --password-stdin
 
             # Force remove existing containers if they exist
-            docker rm -f dev dev-redis 2>/dev/null || true
+            docker rm -f booklio-dev 2>/dev/null || true
             
-            # Remove the old image to ensure a fresh pull
-            docker rmi abhi5hek001/booklio-backend:latest 2>/dev/null || true
-
-            # Start Redis container
-            docker run -d --name dev-redis -p 6379:6379 redis:alpine
-
             # Pull the fresh backend image
             docker pull abhi5hek001/booklio-backend:latest
 
             # Start the backend container
             docker run -d \
-              --name dev \
-              --env-file /home/${{ secrets.EC2_USER }}/dev/.env \
-              --link dev-redis:redis \
+              --name booklio-dev \
+              --env-file /home/${{ secrets.EC2_USER }}/booklio/.env \
               -p 3000:3000 \
               abhi5hek001/booklio-backend:latest
+
+            # Clean unused docker images
+            docker image prune -af
+          
           EOF
