@@ -3,10 +3,22 @@ const path = require("path");
 const morgan = require("morgan");
 const { createLogger, format, transports } = require("winston");
 
-// Ensure the logs directory exists
-const logDirectory = path.join(__dirname, "../logs");
-if (!fs.existsSync(logDirectory)) {
-    fs.mkdirSync(logDirectory);
+// Vercel's filesystem is read-only outside /tmp, so skip file logging there
+const isServerless = !!process.env.VERCEL;
+
+const loggerTransports = [new transports.Console()];
+let requestLoggerStream;
+
+if (!isServerless) {
+    const logDirectory = path.join(__dirname, "../logs");
+    if (!fs.existsSync(logDirectory)) {
+        fs.mkdirSync(logDirectory);
+    }
+    loggerTransports.push(
+        new transports.File({ filename: path.join(logDirectory, "error.log"), level: "error" }),
+        new transports.File({ filename: path.join(logDirectory, "access.log") })
+    );
+    requestLoggerStream = fs.createWriteStream(path.join(logDirectory, "access.log"), { flags: "a" });
 }
 
 // Create a Winston logger instance
@@ -18,17 +30,12 @@ const logger = createLogger({
             return `${timestamp} [${level.toUpperCase()}]: ${message}`;
         })
     ),
-    transports: [
-        new transports.File({ filename: path.join(logDirectory, "error.log"), level: "error" }),
-        new transports.File({ filename: path.join(logDirectory, "access.log") }),
-    ],
+    transports: loggerTransports,
 });
 
 // Morgan middleware to log HTTP requests
-const accessLogStream = fs.createWriteStream(path.join(logDirectory, "access.log"), { flags: "a" });
-
 const requestLogger = morgan("combined", {
-    stream: accessLogStream, // Write logs to access.log
+    stream: requestLoggerStream, // undefined stream defaults morgan to stdout
 });
 
 module.exports = { logger, requestLogger };
