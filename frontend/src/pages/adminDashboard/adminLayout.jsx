@@ -1,6 +1,7 @@
 import Sidebar from "@/components/adminDashboard/Sidebar";
 import { Outlet } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
+import { useSelector } from "react-redux";
 import { IoMdArrowDropdown } from "react-icons/io";
 import { FaSignOutAlt, FaUserCircle, FaRegEnvelope, FaUserShield, FaBell } from "react-icons/fa";
 import { Badge } from "@/components/ui/badge";
@@ -9,7 +10,13 @@ const AdminLayout = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownButtonRef = useRef(null);
   const dropdownMenuRef = useRef(null);
-  
+
+  const adminDetails = useSelector((state) => state.adminAuth.adminDetails);
+  const memberInfo = adminDetails?.memberData || adminDetails || {};
+  const adminName = memberInfo.name || "Admin";
+  const adminEmail = memberInfo.email || "";
+  const adminInitial = adminName.charAt(0).toUpperCase();
+
   const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen);
 
   // Close dropdown if clicked outside
@@ -108,9 +115,9 @@ const AdminLayout = () => {
               onClick={toggleDropdown}
             >
               <div className="w-8 h-8 rounded-full bg-indigo-500 text-white flex items-center justify-center font-medium">
-                A
+                {adminInitial}
               </div>
-              <span className="text-sm font-medium text-gray-200 hidden md:inline">Abhishek</span>
+              <span className="text-sm font-medium text-gray-200 hidden md:inline">{adminName}</span>
               <IoMdArrowDropdown className={`text-gray-400 transition-transform duration-200 ${isDropdownOpen ? 'rotate-180' : ''}`} />
             </button>
 
@@ -125,10 +132,10 @@ const AdminLayout = () => {
                 <div className="p-6 border-b border-gray-700">
                   <div className="flex items-center space-x-4 mb-4">
                     <div className="w-14 h-14 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 text-white flex items-center justify-center text-2xl font-medium shadow-lg">
-                      A
+                      {adminInitial}
                     </div>
                     <div>
-                      <h3 className="font-semibold text-white text-lg">Abhishek Sahay</h3>
+                      <h3 className="font-semibold text-white text-lg">{adminName}</h3>
                       <Badge variant="outline" className="bg-indigo-500/10 text-indigo-400 border-indigo-500/20 mt-1">
                         Administrator
                       </Badge>
@@ -138,11 +145,11 @@ const AdminLayout = () => {
                   <div className="space-y-3 mt-4">
                     <div className="flex items-center text-sm text-gray-300 bg-gray-700/50 p-3 rounded-lg">
                       <FaUserCircle className="mr-3 text-indigo-400 h-4 w-4" />
-                      <span>Abhishek Sahay</span>
+                      <span>{adminName}</span>
                     </div>
                     <div className="flex items-center text-sm text-gray-300 bg-gray-700/50 p-3 rounded-lg">
                       <FaRegEnvelope className="mr-3 text-indigo-400 h-4 w-4" />
-                      <span>abhishek.sy22@iiits.in</span>
+                      <span>{adminEmail}</span>
                     </div>
                     <div className="flex items-center text-sm text-gray-300 bg-gray-700/50 p-3 rounded-lg">
                       <FaUserShield className="mr-3 text-indigo-400 h-4 w-4" />
