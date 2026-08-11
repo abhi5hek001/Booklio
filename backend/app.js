@@ -22,6 +22,7 @@ const cors = require("cors");
 app.use(cors({
   origin: [
     'https://booklio.sahayabhishek.tech',
+    'https://booklio-navy.vercel.app',
     'http://localhost:5174'
   ],
   methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
