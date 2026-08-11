@@ -9,8 +9,13 @@ const app = express();
 
 // Only connect DB and Redis if not in test mode
 if (process.env.NODE_ENV !== 'test') {
-    connectDB();
     connectRedis();
+
+    // Block requests until Mongo is connected, so cold starts don't race
+    // buffered queries against an in-flight connection and time out.
+    app.use((req, res, next) => {
+        connectDB().then(() => next()).catch(next);
+    });
 }
 
 app.set("view engine", "ejs");
